@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PetCare</title>
+</head>
+
+<body>
+
+    <h1>PetCare</h1>
+
+    <h2>Gerenciador de Cuidados do Pet</h2>
+
+    <p>
+        Organize vacinas, consultas, medicamentos
+        e outros cuidados do seu animal.
+    </p>
+
+    <hr>
+
+    <h3>Cadastrar cuidado</h3>
+
+    {% if mensagem %}
+
+        <p>
+            <strong>{{ mensagem }}</strong>
+        </p>
+
+    {% endif %}
+
+    <form method="POST">
+
+        <label>Nome do pet:</label>
+        <br>
+
+        <input
+            type="text"
+            name="nome_pet"
+            required
+        >
+
+        <br><br>
+
+        <label>Tipo de cuidado:</label>
+        <br>
+
+        <select name="tipo_cuidado" required>
+
+            <option value="">
+                Selecione
+            </option>
+
+            <option value="Vacina">
+                Vacina
+            </option>
+
+            <option value="Consulta">
+                Consulta
+            </option>
+
+            <option value="Medicamento">
+                Medicamento
+            </option>
+
+            <option value="Outro">
+                Outro
+            </option>
+
+        </select>
+
+        <br><br>
+
+        <label>Descrição:</label>
+        <br>
+
+        <input
+            type="text"
+            name="descricao"
+            required
+        >
+
+        <br><br>
+
+        <label>Data:</label>
+        <br>
+
+        <input
+            type="text"
+            name="data"
+            id="data"
+            placeholder="DD/MM/AAAA"
+            maxlength="10"
+            inputmode="numeric"
+            required
+        >
+
+        <br><br>
+
+        <button type="submit">
+            Cadastrar
+        </button>
+
+    </form>
+
+    <hr>
+
+    <h2>Agenda</h2>
+
+    {% if cuidados %}
+
+        {% for cuidado in cuidados %}
+
+            <p>
+
+                <strong>Pet:</strong>
+                {{ cuidado["nome_pet"] }}
+
+                <br>
+
+                <strong>Tipo:</strong>
+                {{ cuidado["tipo_cuidado"] }}
+
+                <br>
+
+                <strong>Descrição:</strong>
+                {{ cuidado["descricao"] }}
+
+                <br>
+
+                <strong>Data:</strong>
+                {{ cuidado["data"] | data_br }}
+
+                <br>
+
+                <strong>Status:</strong>
+                {{ cuidado["status"] }}
+
+                <br><br>
+
+                {% if cuidado["status"] == "Pendente" %}
+
+                    <a href="/concluir/{{ cuidado['id'] }}">
+                        <button type="button">
+                            Concluir
+                        </button>
+                    </a>
+
+                {% endif %}
+
+                <a href="/excluir/{{ cuidado['id'] }}">
+                    <button type="button">
+                        Excluir
+                    </button>
+                </a>
+
+            </p>
+
+            <hr>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            Nenhum cuidado agendado.
+        </p>
+
+    {% endif %}
+
+
+    <script>
+
+        const campoData = document.getElementById("data");
+
+        campoData.addEventListener("input", function () {
+
+            let numeros = this.value.replace(/\D/g, "");
+
+            if (numeros.length > 8) {
+                numeros = numeros.substring(0, 8);
+            }
+
+            if (numeros.length > 4) {
+
+                this.value =
+                    numeros.substring(0, 2) + "/" +
+                    numeros.substring(2, 4) + "/" +
+                    numeros.substring(4, 8);
+
+            } else if (numeros.length > 2) {
+
+                this.value =
+                    numeros.substring(0, 2) + "/" +
+                    numeros.substring(2, 4);
+
+            } else {
+
+                this.value = numeros;
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
