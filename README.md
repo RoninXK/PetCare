@@ -29,13 +29,20 @@ O sistema permite registrar vacinas, consultas, medicamentos e outros cuidados, 
 
 PetCare/
 │
-├── app.py
-├── petcare.db
-├── templates/
+│
+│── app.py
+│
+│── petcare.db
+│
+│── templates/
+│
 │   └── index.html
-├── README.md
-├── requirements.txt
-└── .gitignore
+│
+│── README.md
+│
+│── requirements.txt
+│
+│── .gitignore
 
 ## Como executar o projeto
 
