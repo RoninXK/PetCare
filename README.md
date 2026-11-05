@@ -6,9 +6,9 @@ O projeto foi desenvolvido para a disciplina de Qualidade de Software da Univers
 
 ## Funcionalidades
 
-Na página inicial há um formulário para cadastrar um cuidado, informando o nome do pet, o tipo de cuidado (vacina, consulta, medicamento ou outro), uma descrição e a data no formato DD/MM/AAAA.
+Na página inicial há um formulário para cadastrar um cuidado, informando o nome do pet, o tipo de cuidado, uma descrição e a data no formato DD/MM/AAAA. O tipo pode ser escolhido na lista (vacina, consulta ou medicamento) ou, pela opção "Adicionar outro tipo…", digitado à mão, como "Banho e tosa", com até 50 caracteres.
 
-Os dados são conferidos no servidor antes de serem gravados. O nome do pet (até 100 caracteres) e a descrição (até 500) são obrigatórios e não podem ficar só com espaços, o tipo precisa ser um dos quatro da lista e a data precisa existir e não pode ser anterior a hoje. Se algo estiver errado, a página mostra o que precisa ser corrigido, mantém o que já foi digitado e não grava nada.
+Os dados são conferidos no servidor antes de serem gravados. O nome do pet (até 100 caracteres) e a descrição (até 500) são obrigatórios e não podem ficar só com espaços, o tipo precisa ser um dos três da lista ou, se for digitado, não pode ficar vazio, e a data precisa existir e não pode ser anterior a hoje. Se algo estiver errado, a página mostra o que precisa ser corrigido, mantém o que já foi digitado e não grava nada.
 
 Logo abaixo fica a agenda, com os cuidados ordenados por data. Todo cuidado novo entra como pendente e pode ser marcado como concluído ou excluído. Antes de excluir, o navegador pede uma confirmação; se você cancelar, nada é apagado. Os dados ficam salvos em um banco SQLite local, o arquivo `petcare.db`.
 

@@ -162,7 +162,7 @@ Também foi registrado que o modo debug será considerado na preparação de uma
 | Campo | Regra |
 |---|---|
 | `nome_pet` | Obrigatório, não pode ser só espaços, máximo de 100 caracteres |
-| `tipo_cuidado` | Obrigatório, deve ser um de: Vacina, Consulta, Medicamento, Outro |
+| `tipo_cuidado` | Obrigatório, deve ser um de: Vacina, Consulta, Medicamento, Outro. **Alterada em 05/11/2026 (Issue #17):** a opção "Outro" foi trocada por "Adicionar outro tipo…"; a lista aceita Vacina, Consulta, Medicamento ou essa opção, e nesse caso o campo `tipo_personalizado` é obrigatório, não pode ser só espaços e tem até 50 caracteres |
 | `descricao` | Obrigatório, não pode ser só espaços, máximo de 500 caracteres |
 | `data` | Obrigatório, formato DD/MM/AAAA, data existente no calendário, igual ou posterior à data atual (a data de hoje é válida; datas anteriores são inválidas) |
 | Campo ausente | Mensagem de erro amigável, sem erro HTTP genérico |
@@ -201,6 +201,21 @@ Os demais indicadores do CodeFactor (nota, linhas, complexidade, métodos, médi
 | V12 | Campo ausente na requisição | Rejeitado com mensagem (não HTTP 400 genérico), 0 registros gravados |
 | A01 | Cadastro válido com data futura | Aceito, 1 registro com status "Pendente" |
 | A02 | Cadastro válido com a data de hoje, `nome_pet` com 100 e `descricao` com 500 caracteres (limites exatos) | Aceito, 1 registro com status "Pendente" |
+
+#### Casos acrescentados em 05/11/2026 (Issue #17, tipo digitado)
+
+Os casos acima, e o resultado de 12 de 12 inválidos rejeitados medido no PR #11, continuam valendo como foram registrados. O V06 continua correto: um valor fora da lista enviado direto no campo `tipo_cuidado` segue rejeitado. A mudança de regra acrescenta:
+
+| ID | Caso | Resultado esperado |
+|---|---|---|
+| V13 | "Adicionar outro tipo…" com o tipo digitado vazio | Rejeitado, 0 registros gravados |
+| V14 | "Adicionar outro tipo…" com o tipo digitado só com espaços | Rejeitado, 0 registros gravados |
+| V15 | Tipo digitado com 51 caracteres | Rejeitado, 0 registros gravados |
+| V16 | `tipo_cuidado` = "Outro", opção que saiu da lista | Rejeitado, 0 registros gravados |
+| A03 | Tipo digitado "Banho e tosa" com espaços nas pontas | Aceito e gravado como "Banho e tosa" |
+| A04 | Tipo digitado com 50 caracteres (limite exato) | Aceito |
+
+Com isso, o indicador do P1 passa a ter 16 casos inválidos (V01–V16).
 
 ### 6.2 P2 – Concluir, excluir, CSRF e confirmação
 
@@ -298,7 +313,8 @@ Fluxo exigido: **issue → branch → commit → pull request → revisão → m
 | 3 | #1 – P1: validação dos dados cadastrados | `fix/1-validacao-dados` | A3, A4 | Corretiva | **Concluído** (PR #11, merge `71ab1d0`) |
 | 4 | #2 – P2: concluir/excluir via POST com CSRF e confirmação | `fix/2-seguranca-cuidados` | A5, A6 | Corretiva | **Concluído** (PR #12, merge `48345f5`) |
 | 5 | #13 – Refatorar o acesso ao banco e desligar o modo debug por padrão | `refactor/13-acesso-dados` | A7, A8 | Preventiva | **Concluído** (PR #14, merge `1ffa167`) |
-| 6 | #15 – Modernizar a interface do PetCare | `ui/15-interface` | Fora das ações do plano original | Perfectiva | Em andamento |
+| 6 | #15 – Modernizar a interface do PetCare | `ui/15-interface` | Fora das ações do plano original | Perfectiva | **Concluído** (PR #16, merge `e4eb66c`) |
+| 7 | #17 – Permitir digitar um tipo de cuidado que não está na lista | `feat/17-tipo-personalizado` | Altera a regra de tipo do P1 (seção 6.1) | Perfectiva | Em andamento |
 
 O `<nº>` é o número da issue criada no GitHub. Situação das demais issues do repositório:
 
