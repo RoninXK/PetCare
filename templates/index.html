@@ -125,7 +125,38 @@
 
             <div class="agenda-titulo">
                 <h2 id="titulo-agenda">Agenda</h2>
+                {% if filtros_ativos %}
+                <p class="contagem" aria-live="polite">{{ cuidados | length }} {{ "cuidado encontrado" if cuidados | length == 1 else "cuidados encontrados" }}</p>
+                {% endif %}
             </div>
+
+            <form method="GET" action="/" class="filtros" role="search" aria-label="Filtrar a agenda">
+                <div class="filtro filtro-busca">
+                    <label for="busca">Pesquisar</label>
+                    <input type="search" id="busca" name="busca" value="{{ filtros.busca }}" placeholder="Nome, tipo ou descrição">
+                </div>
+                <div class="filtro">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="todos"{% if filtros.status == "todos" %} selected{% endif %}>Todos</option>
+                        <option value="pendentes"{% if filtros.status == "pendentes" %} selected{% endif %}>Pendentes</option>
+                        <option value="concluidos"{% if filtros.status == "concluidos" %} selected{% endif %}>Concluídos</option>
+                    </select>
+                </div>
+                <div class="filtro">
+                    <label for="ordem">Ordem</label>
+                    <select id="ordem" name="ordem">
+                        <option value="antigos"{% if filtros.ordem == "antigos" %} selected{% endif %}>Datas mais antigas primeiro</option>
+                        <option value="recentes"{% if filtros.ordem == "recentes" %} selected{% endif %}>Datas mais recentes primeiro</option>
+                    </select>
+                </div>
+                <div class="filtro-acoes">
+                    <button type="submit" class="botao botao-filtrar">Filtrar</button>
+                    {% if filtros_ativos %}
+                    <a href="/" class="limpar-filtros">Limpar filtros</a>
+                    {% endif %}
+                </div>
+            </form>
 
             {% if cuidados %}
 
@@ -148,7 +179,7 @@
                     <div class="cuidado-acoes">
 
                         {% if pendente %}
-                        <form method="POST" action="/concluir/{{ cuidado['id'] }}">
+                        <form method="POST" action="/concluir/{{ cuidado['id'] }}{% if consulta_filtros %}?{{ consulta_filtros }}{% endif %}">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit" class="botao botao-concluir">
                                 Concluir<span class="sr-only"> o cuidado de {{ cuidado["nome_pet"] }}</span>
@@ -156,7 +187,7 @@
                         </form>
                         {% endif %}
 
-                        <form method="POST" action="/excluir/{{ cuidado['id'] }}"
+                        <form method="POST" action="/excluir/{{ cuidado['id'] }}{% if consulta_filtros %}?{{ consulta_filtros }}{% endif %}"
                               onsubmit="return confirm('Tem certeza que deseja excluir este cuidado?');">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit" class="botao botao-excluir">
@@ -174,7 +205,11 @@
 
             {% else %}
 
+            {% if filtros_ativos %}
+            <p class="agenda-vazia">Nenhum cuidado encontrado com esses filtros.</p>
+            {% else %}
             <p class="agenda-vazia">Nenhum cuidado agendado.</p>
+            {% endif %}
 
             {% endif %}
 
