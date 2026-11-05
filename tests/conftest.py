@@ -2,9 +2,14 @@
 
 Todos os testes usam um banco SQLite temporário, criado em um diretório
 isolado do pytest (tmp_path). O banco real (petcare.db) nunca é aberto.
+
+A proteção CSRF fica ligada em todos os testes. O fixture `client` pega
+um token real emitido pela página inicial, na mesma sessão, e o envia nos
+POSTs; o fixture `cliente_sem_token` não envia token nenhum.
 """
 
 import hashlib
+import re
 import sqlite3
 from pathlib import Path
 
@@ -44,10 +49,63 @@ def app_teste(banco_temporario, monkeypatch):
     return petcare.app
 
 
+PADRAO_TOKEN = re.compile(r'name="csrf_token" value="([^"]+)"')
+
+
+def obter_token(cliente):
+    """Token CSRF emitido pela página inicial para a sessão do cliente, se houver."""
+    encontrado = PADRAO_TOKEN.search(cliente.get("/").get_data(as_text=True))
+    return encontrado.group(1) if encontrado else None
+
+
+class ClienteComToken:
+    """Cliente de teste que envia nos POSTs o token CSRF real da sessão.
+
+    O token é obtido da página inicial, como faria o navegador. Se a página
+    não tiver token (código anterior ao P2), o POST segue sem ele.
+    """
+
+    def __init__(self, cliente):
+        self._cliente = cliente
+
+    def post(self, url, data=None, **kwargs):
+        dados = dict(data or {})
+        if "csrf_token" not in dados:
+            token = obter_token(self._cliente)
+            if token:
+                dados["csrf_token"] = token
+        return self._cliente.post(url, data=dados, **kwargs)
+
+    def __getattr__(self, nome):
+        return getattr(self._cliente, nome)
+
+
 @pytest.fixture
 def client(app_teste):
-    """Cliente HTTP de teste do Flask."""
+    """Cliente HTTP de teste que se comporta como o navegador (com token CSRF)."""
+    return ClienteComToken(app_teste.test_client())
+
+
+@pytest.fixture
+def cliente_sem_token(app_teste):
+    """Cliente HTTP de teste que nunca envia token CSRF."""
     return app_teste.test_client()
+
+
+@pytest.fixture
+def cuidado_existente(app_teste, banco_temporario):
+    """Grava um cuidado pendente direto no banco temporário e devolve o id."""
+    conexao = sqlite3.connect(banco_temporario)
+    try:
+        cursor = conexao.execute(
+            "INSERT INTO cuidados (nome_pet, tipo_cuidado, descricao, data, status) "
+            "VALUES (?, ?, ?, ?, ?)",
+            ("Rex", "Vacina", "Antirrábica", "2099-12-31", "Pendente"),
+        )
+        conexao.commit()
+        return cursor.lastrowid
+    finally:
+        conexao.close()
 
 
 @pytest.fixture
