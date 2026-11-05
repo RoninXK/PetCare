@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect
 import sqlite3
 from datetime import datetime
+
+from flask import Flask, redirect, render_template, request
 
 app = Flask(__name__)
 app.config["DATABASE"] = "petcare.db"
