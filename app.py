@@ -1,11 +1,26 @@
+import os
 import re
+import secrets
 import sqlite3
 from datetime import date, datetime
 
-from flask import Flask, redirect, render_template, request
+from flask import Flask, abort, redirect, render_template, request
+from flask_wtf.csrf import CSRFError, CSRFProtect
 
 app = Flask(__name__)
 app.config["DATABASE"] = "petcare.db"
+
+# A chave vem da variável de ambiente PETCARE_SECRET_KEY. Sem ela, uma chave
+# aleatória é gerada a cada execução: funciona, mas formulários abertos antes
+# de reiniciar o servidor deixam de ser aceitos.
+app.config["SECRET_KEY"] = os.environ.get("PETCARE_SECRET_KEY") or secrets.token_hex(32)
+
+csrf = CSRFProtect(app)
+
+MSG_CSRF = (
+    "Não foi possível confirmar a origem do formulário. "
+    "Volte para a agenda e tente novamente."
+)
 
 TIPOS_CUIDADO = ("Vacina", "Consulta", "Medicamento", "Outro")
 LIMITE_NOME_PET = 100
@@ -144,12 +159,12 @@ def inicio():
     )
 
 
-@app.route("/concluir/<int:id>")
+@app.route("/concluir/<int:id>", methods=["POST"])
 def concluir(id):
 
     conexao = conectar_banco()
 
-    conexao.execute("""
+    cursor = conexao.execute("""
         UPDATE cuidados
         SET status = 'Concluído'
         WHERE id = ?
@@ -158,15 +173,18 @@ def concluir(id):
     conexao.commit()
     conexao.close()
 
+    if cursor.rowcount == 0:
+        abort(404)
+
     return redirect("/")
 
 
-@app.route("/excluir/<int:id>")
+@app.route("/excluir/<int:id>", methods=["POST"])
 def excluir(id):
 
     conexao = conectar_banco()
 
-    conexao.execute("""
+    cursor = conexao.execute("""
         DELETE FROM cuidados
         WHERE id = ?
     """, (id,))
@@ -174,7 +192,21 @@ def excluir(id):
     conexao.commit()
     conexao.close()
 
+    if cursor.rowcount == 0:
+        abort(404)
+
     return redirect("/")
+
+
+@app.errorhandler(CSRFError)
+def erro_csrf(erro):
+    pagina = (
+        '<!DOCTYPE html>\n<html lang="pt-BR">\n<head><meta charset="UTF-8">'
+        "<title>PetCare</title></head>\n"
+        f'<body>\n<p>{MSG_CSRF}</p>\n<p><a href="/">Voltar para a agenda</a></p>\n'
+        "</body>\n</html>\n"
+    )
+    return pagina, 400
 
 
 @app.template_filter("data_br")
