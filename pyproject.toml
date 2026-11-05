@@ -1,0 +1,12 @@
+# Configuração das ferramentas de qualidade do PetCare.
+# O projeto não é distribuído como pacote; este arquivo contém apenas
+# a configuração do pytest e do pytest-cov.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
