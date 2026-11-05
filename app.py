@@ -3,10 +3,11 @@ import sqlite3
 from datetime import datetime
 
 app = Flask(__name__)
+app.config["DATABASE"] = "petcare.db"
 
 
 def conectar_banco():
-    conexao = sqlite3.connect("petcare.db")
+    conexao = sqlite3.connect(app.config["DATABASE"])
     conexao.row_factory = sqlite3.Row
     return conexao
 
