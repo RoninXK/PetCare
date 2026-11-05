@@ -314,8 +314,8 @@ Fluxo exigido: **issue → branch → commit → pull request → revisão → m
 | 4 | #2 – P2: concluir/excluir via POST com CSRF e confirmação | `fix/2-seguranca-cuidados` | A5, A6 | Corretiva | **Concluído** (PR #12, merge `48345f5`) |
 | 5 | #13 – Refatorar o acesso ao banco e desligar o modo debug por padrão | `refactor/13-acesso-dados` | A7, A8 | Preventiva | **Concluído** (PR #14, merge `1ffa167`) |
 | 6 | #15 – Modernizar a interface do PetCare | `ui/15-interface` | Fora das ações do plano original | Perfectiva | **Concluído** (PR #16, merge `e4eb66c`) |
-| 7 | #17 – Permitir digitar um tipo de cuidado que não está na lista | `feat/17-tipo-personalizado` | Altera a regra de tipo do P1 (seção 6.1) | Perfectiva | Em andamento |
-| 8 | #19 – Adicionar pesquisa e filtros na agenda | `feat/19-filtros-agenda` | Fora das ações do plano original (casos F01–F15) | Perfectiva | Em andamento |
+| 7 | #17 – Permitir digitar um tipo de cuidado que não está na lista | `feat/17-tipo-personalizado` | Altera a regra de tipo do P1 (seção 6.1) | Perfectiva | **Concluído** (PR #18, merge `fa3a031`) |
+| 8 | #19 – Adicionar pesquisa e filtros na agenda | `feat/19-filtros-agenda` | Fora das ações do plano original (casos F01–F15) | Perfectiva | **Concluído** (PR #20, merge `9cc44f6`) |
 
 O `<nº>` é o número da issue criada no GitHub. Situação das demais issues do repositório:
 
