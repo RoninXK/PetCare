@@ -226,6 +226,66 @@ select:focus-visible {
     gap: 12px;
 }
 
+.contagem {
+    margin: 0;
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+}
+
+.filtros {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 14px;
+    border-radius: 12px;
+    background: var(--cinza-fundo);
+}
+
+.filtro label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.filtro input,
+.filtro select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 8px;
+    background: var(--branco);
+    color: var(--texto);
+    font: inherit;
+}
+
+.filtro-busca {
+    grid-column: 1 / -1;
+}
+
+.filtro-acoes {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+}
+
+.botao-filtrar {
+    background: var(--verde);
+    color: var(--branco);
+}
+
+.botao-filtrar:hover {
+    background: var(--verde-escuro);
+}
+
+.limpar-filtros {
+    color: var(--verde-escuro);
+    font-weight: 600;
+}
+
 .lista-cuidados {
     display: grid;
     gap: 14px;
@@ -350,6 +410,10 @@ select:focus-visible {
 
     .card {
         padding: 18px;
+    }
+
+    .filtros {
+        grid-template-columns: 1fr;
     }
 
     .cuidado-acoes .botao,

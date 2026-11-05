@@ -14,6 +14,8 @@ Logo abaixo fica a agenda, com os cuidados ordenados por data. Todo cuidado novo
 
 Todos os formulários que alteram dados (cadastro, conclusão e exclusão) usam POST e são protegidos contra CSRF com o Flask-WTF. Um pedido que chegue sem o token do formulário, ou com um token inválido, é recusado com uma mensagem e um link de volta para a agenda.
 
+Em cima da agenda dá para pesquisar pelo nome do pet, pelo tipo ou pela descrição, mostrar só os pendentes ou só os concluídos e escolher se as datas mais antigas ou as mais recentes aparecem primeiro. Os filtros ficam no endereço da página, então continuam valendo ao recarregar e depois de concluir, excluir ou cadastrar um cuidado.
+
 No computador, o formulário e a agenda ficam lado a lado; no celular, um embaixo do outro. Cada cuidado aparece num card com o tipo e o status, e os concluídos ficam acinzentados para se destacarem dos pendentes. Os campos têm rótulos associados e a página pode ser usada só com o teclado.
 
 ![Página principal do PetCare](docs/interface/depois-desktop.png)

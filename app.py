@@ -4,8 +4,9 @@ import secrets
 import sqlite3
 from contextlib import contextmanager
 from datetime import date, datetime
+from urllib.parse import urlencode
 
-from flask import Flask, abort, redirect, render_template, request
+from flask import Flask, abort, redirect, render_template, request, url_for
 from flask_wtf.csrf import CSRFError, CSRFProtect
 
 app = Flask(__name__)
@@ -65,13 +66,53 @@ def criar_banco():
         """)
 
 
-def listar_cuidados():
-    """Cuidados da agenda, ordenados por data."""
+STATUS_DO_FILTRO = {"pendentes": "Pendente", "concluidos": "Concluído"}
+FILTROS_PADRAO = {"busca": "", "status": "todos", "ordem": "antigos"}
+CAMPOS_PESQUISADOS = ("nome_pet", "tipo_cuidado", "descricao")
+
+
+def ler_filtros(parametros):
+    """Filtros da agenda vindos da URL; valores desconhecidos viram o padrão."""
+    status = parametros.get("status", "todos")
+    ordem = parametros.get("ordem", "antigos")
+    return {
+        "busca": parametros.get("busca", "").strip(),
+        "status": status if status in STATUS_DO_FILTRO else "todos",
+        "ordem": ordem if ordem in ("antigos", "recentes") else "antigos",
+    }
+
+
+def filtros_alterados(filtros):
+    """Só os filtros diferentes do padrão, para montar a URL."""
+    return {nome: valor for nome, valor in filtros.items() if valor != FILTROS_PADRAO[nome]}
+
+
+def endereco_da_agenda(filtros):
+    return url_for("inicio", **filtros_alterados(filtros))
+
+
+def listar_cuidados(busca="", status="todos", ordem="antigos"):
+    """Cuidados da agenda, filtrados por status e texto e ordenados por data."""
+    status_banco = STATUS_DO_FILTRO.get(status, "")
     with conectar_banco() as conexao:
-        return conexao.execute("""
+        cuidados = conexao.execute("""
             SELECT * FROM cuidados
-            ORDER BY data ASC
-        """).fetchall()
+            WHERE (? = '' OR status = ?)
+            ORDER BY
+                CASE WHEN ? = 'recentes' THEN data END DESC,
+                CASE WHEN ? = 'recentes' THEN id END DESC,
+                data ASC,
+                id ASC
+        """, (status_banco, status_banco, ordem, ordem)).fetchall()
+
+    if not busca:
+        return cuidados
+
+    termo = busca.casefold()
+    return [
+        cuidado for cuidado in cuidados
+        if any(termo in cuidado[campo].casefold() for campo in CAMPOS_PESQUISADOS)
+    ]
 
 
 def inserir_cuidado(nome_pet, tipo_cuidado, descricao, data_banco):
@@ -90,11 +131,16 @@ def alterar_cuidado(sql, id_cuidado):
 
 
 def pagina_inicial(erros=(), dados=None):
+    filtros = ler_filtros(request.args)
+    alterados = filtros_alterados(filtros)
     return render_template(
         "index.html",
-        cuidados=listar_cuidados(),
+        cuidados=listar_cuidados(**filtros),
         erros=erros,
-        dados=dados
+        dados=dados,
+        filtros=filtros,
+        filtros_ativos=bool(alterados),
+        consulta_filtros=urlencode(alterados)
     )
 
 
@@ -175,7 +221,7 @@ def inicio():
         nome_pet, tipo_escolhido(tipo_cuidado, tipo_personalizado), descricao, data_banco
     )
 
-    return redirect("/")
+    return redirect(endereco_da_agenda(ler_filtros(request.args)))
 
 
 @app.route("/concluir/<int:id_cuidado>", methods=["POST"])
@@ -190,7 +236,7 @@ def concluir(id_cuidado):
     if alterados == 0:
         abort(404)
 
-    return redirect("/")
+    return redirect(endereco_da_agenda(ler_filtros(request.args)))
 
 
 @app.route("/excluir/<int:id_cuidado>", methods=["POST"])
@@ -204,7 +250,7 @@ def excluir(id_cuidado):
     if alterados == 0:
         abort(404)
 
-    return redirect("/")
+    return redirect(endereco_da_agenda(ler_filtros(request.args)))
 
 
 @app.errorhandler(CSRFError)
