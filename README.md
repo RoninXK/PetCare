@@ -1,100 +1,78 @@
 # PetCare
 
-## Gerenciador de Cuidados do Pet
+O PetCare é uma aplicação web para organizar os cuidados com animais de estimação, como vacinas, consultas e medicamentos. A ideia é ter num só lugar a agenda do pet, com o que já foi feito e o que ainda está pendente.
 
-O PetCare é uma aplicação web desenvolvida para auxiliar tutores na organização dos principais cuidados relacionados aos seus animais de estimação.
-
-O sistema permite registrar vacinas, consultas, medicamentos e outros cuidados, mantendo as informações organizadas em uma agenda.
+O projeto foi desenvolvido para a disciplina de Qualidade de Software da Universidade Católica de Brasília. A primeira versão serviu de base para a avaliação inicial de qualidade e, nesta segunda etapa, o sistema está recebendo melhorias acompanhadas de testes automatizados e integração contínua.
 
 ## Funcionalidades
 
-- Cadastro do nome do pet
-- Cadastro do tipo de cuidado
-- Registro da descrição do cuidado
-- Registro da data
-- Visualização dos cuidados na agenda
-- Identificação do status do cuidado
-- Marcação do cuidado como concluído
-- Exclusão de registros
-- Armazenamento das informações em banco de dados
+Na página inicial há um formulário para cadastrar um cuidado, informando o nome do pet, o tipo de cuidado (vacina, consulta, medicamento ou outro), uma descrição e a data no formato DD/MM/AAAA. Se a data não for válida, o sistema mostra uma mensagem e não grava o registro.
 
-## Tecnologias utilizadas
+Logo abaixo fica a agenda, com os cuidados ordenados por data. Todo cuidado novo entra como pendente e pode ser marcado como concluído ou excluído. Os dados ficam salvos em um banco SQLite local, o arquivo `petcare.db`.
 
-- Python
-- Flask
-- HTML
-- SQLite
+## Tecnologias
+
+O back-end é feito em Python com Flask, a página usa templates HTML com Jinja2 e os dados ficam em SQLite. Para a parte de qualidade, o projeto usa pytest e pytest-cov nos testes, Ruff na análise estática e GitHub Actions na integração contínua. O projeto foi testado com Python 3.14.
+
+## Como executar
+
+Com o Python instalado, dentro da pasta do projeto, instale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
+As versões estão fixadas no `requirements.txt`, para que a instalação seja igual em qualquer máquina. Se preferir, crie antes um ambiente virtual com `python -m venv venv`, pois a pasta `venv/` já está no `.gitignore`.
+
+Depois, inicie a aplicação:
+
+```bash
+python app.py
+```
+
+Ao iniciar, a tabela de cuidados é criada no `petcare.db` caso ainda não exista. Com o servidor rodando, é só abrir http://127.0.0.1:5000 no navegador. O servidor sobe em modo de desenvolvimento (debug), então não deve ser usado em produção.
+
+## Testes e análise estática
+
+As ferramentas de desenvolvimento ficam em um arquivo separado, que já inclui as dependências da aplicação:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+Para rodar os testes:
+
+```bash
+pytest
+```
+
+Os testes ficam na pasta `tests/` e usam o cliente de testes do Flask. Cada teste cria um banco SQLite temporário, então rodar a suíte não altera o `petcare.db`. Para ver também a cobertura do `app.py`, use `pytest --cov`.
+
+Para a análise estática:
+
+```bash
+ruff check .
+```
+
+As regras do Ruff e as configurações do pytest estão no `pyproject.toml`.
+
+## Verificação automática
+
+O workflow `.github/workflows/ci.yml` roda no GitHub Actions a cada push e a cada pull request. Ele instala as dependências de `requirements-dev.txt`, confere se não há conflitos entre elas, executa o Ruff e depois o pytest com o relatório de cobertura. Se alguma etapa falhar, a execução aparece como falha no commit ou no pull request.
 
 ## Estrutura do projeto
 
-PetCare/
-│
-│
-│── app.py
-│
-│── petcare.db
-│
-│── templates/
-│
-│   └── index.html
-│
-│── README.md
-│
-│── requirements.txt
-│
-│── .gitignore
+```
+app.py                 aplicação Flask (rotas e acesso ao banco)
+templates/index.html   página principal
+petcare.db             banco SQLite
+tests/                 testes automatizados
+pyproject.toml         configuração do pytest, da cobertura e do Ruff
+requirements.txt       dependências da aplicação
+requirements-dev.txt   dependências de desenvolvimento
+.github/workflows/     workflow de integração contínua
+```
 
-## Como executar o projeto
+## Qualidade de software
 
-### 1. Instalar o Python
-
-É necessário possuir o Python instalado no computador.
-
-### 2. Instalar as dependências
-
-No terminal, dentro da pasta do projeto, execute:
-
-pip install -r requirements.txt
-
-### 3. Executar a aplicação
-
-Execute:
-
-python app.py
-
-### 4. Acessar o sistema
-
-Abra o navegador e acesse:
-
-http://127.0.0.1:5000
-
-## Banco de dados
-
-O projeto utiliza SQLite para armazenamento dos dados.
-
-O banco utilizado é:
-
-petcare.db
-
-A tabela principal é chamada:
-
-cuidados
-
-Ela armazena:
-
-- ID
-- Nome do pet
-- Tipo de cuidado
-- Descrição
-- Data
-- Status
-
-## Situação atual
-
-O projeto encontra-se em sua primeira versão funcional.
-
-Esta versão será utilizada como base para a avaliação inicial da qualidade do software na disciplina de Qualidade de Software.
-
-## Versão
-
-v1.0.0-baseline
+A avaliação inicial da Parte 1 está em [BASELINE.md](BASELINE.md), referente à versão `v1.0.0-baseline`. O plano da Parte 2, com os problemas escolhidos, os indicadores e as metas, está em [PLANO_MELHORIA_PARTE2.md](PLANO_MELHORIA_PARTE2.md).
