@@ -211,6 +211,11 @@ def data_br(data):
         return data
 
 
+def modo_debug():
+    """O modo debug fica desligado, a não ser que PETCARE_DEBUG seja "1"."""
+    return os.environ.get("PETCARE_DEBUG") == "1"
+
+
 if __name__ == "__main__":
     criar_banco()
-    app.run(debug=True)
+    app.run(debug=modo_debug())
