@@ -86,9 +86,9 @@ pyproject.toml         configuração do pytest, da cobertura e do Ruff
 requirements.txt       dependências da aplicação
 requirements-dev.txt   dependências de desenvolvimento
 .github/workflows/     workflow de integração contínua
-docs/interface/        capturas da interface antes e depois da modernização
+docs/interface/        capturas da interface (antes e depois da modernização e filtros)
 ```
 
 ## Qualidade de software
 
-A avaliação inicial da Parte 1 está em [BASELINE.md](BASELINE.md), referente à versão `v1.0.0-baseline`. O plano da Parte 2, com os problemas escolhidos, os indicadores e as metas, está em [PLANO_MELHORIA_PARTE2.md](PLANO_MELHORIA_PARTE2.md).
+A avaliação inicial da Parte 1 está em [BASELINE.md](BASELINE.md), referente à versão `v1.0.0-baseline`. O plano da Parte 2, com os problemas escolhidos, os indicadores e as metas, está em [PLANO_MELHORIA_PARTE2.md](PLANO_MELHORIA_PARTE2.md). A seção 10.1 do plano lista cada ciclo de mudança com a issue, a branch e o pull request correspondentes.
