@@ -1,10 +1,16 @@
+import re
 import sqlite3
-from datetime import datetime
+from datetime import date, datetime
 
 from flask import Flask, redirect, render_template, request
 
 app = Flask(__name__)
 app.config["DATABASE"] = "petcare.db"
+
+TIPOS_CUIDADO = ("Vacina", "Consulta", "Medicamento", "Outro")
+LIMITE_NOME_PET = 100
+LIMITE_DESCRICAO = 500
+FORMATO_DATA = re.compile(r"\d{2}/\d{2}/\d{4}")
 
 
 def conectar_banco():
@@ -31,29 +37,59 @@ def criar_banco():
     conexao.close()
 
 
+def converter_data(data_digitada):
+    """Converte DD/MM/AAAA para date, ou retorna None se a data for inválida."""
+    if not FORMATO_DATA.fullmatch(data_digitada):
+        return None
+
+    try:
+        return datetime.strptime(data_digitada, "%d/%m/%Y").date()
+    except ValueError:
+        return None
+
+
+def validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada):
+    """Retorna a lista de mensagens de erro do cadastro (vazia se estiver tudo certo)."""
+    erros = []
+
+    if not nome_pet.strip():
+        erros.append("Informe o nome do pet.")
+    elif len(nome_pet) > LIMITE_NOME_PET:
+        erros.append(f"O nome do pet pode ter no máximo {LIMITE_NOME_PET} caracteres.")
+
+    if tipo_cuidado not in TIPOS_CUIDADO:
+        erros.append("Selecione um tipo de cuidado válido.")
+
+    if not descricao.strip():
+        erros.append("Informe a descrição do cuidado.")
+    elif len(descricao) > LIMITE_DESCRICAO:
+        erros.append(f"A descrição pode ter no máximo {LIMITE_DESCRICAO} caracteres.")
+
+    data_convertida = converter_data(data_digitada)
+
+    if data_convertida is None:
+        erros.append("Data inválida. Digite uma data válida no formato DD/MM/AAAA.")
+    elif data_convertida < date.today():
+        erros.append("A data não pode ser anterior a hoje.")
+
+    return erros
+
+
 @app.route("/", methods=["GET", "POST"])
 def inicio():
 
-    mensagem = ""
+    erros = []
 
     if request.method == "POST":
 
-        nome_pet = request.form["nome_pet"]
-        tipo_cuidado = request.form["tipo_cuidado"]
-        descricao = request.form["descricao"]
-        data_digitada = request.form["data"]
+        nome_pet = request.form.get("nome_pet", "")
+        tipo_cuidado = request.form.get("tipo_cuidado", "")
+        descricao = request.form.get("descricao", "")
+        data_digitada = request.form.get("data", "")
 
-        try:
-            data_convertida = datetime.strptime(
-                data_digitada,
-                "%d/%m/%Y"
-            )
+        erros = validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada)
 
-            data_banco = data_convertida.strftime("%Y-%m-%d")
-
-        except ValueError:
-
-            mensagem = "Data inválida. Digite uma data válida no formato DD/MM/AAAA."
+        if erros:
 
             conexao = conectar_banco()
 
@@ -67,8 +103,11 @@ def inicio():
             return render_template(
                 "index.html",
                 cuidados=cuidados,
-                mensagem=mensagem
+                erros=erros,
+                dados=request.form
             )
+
+        data_banco = converter_data(data_digitada).strftime("%Y-%m-%d")
 
         conexao = conectar_banco()
 
@@ -101,7 +140,7 @@ def inicio():
     return render_template(
         "index.html",
         cuidados=cuidados,
-        mensagem=mensagem
+        erros=erros
     )
 
 

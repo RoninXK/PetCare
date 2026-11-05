@@ -294,8 +294,8 @@ Fluxo exigido: **issue → branch → commit → pull request → revisão → m
 | Ordem | Issue | Branch | Ações | Tipo | Situação |
 |---|---|---|---|---|---|
 | 1 | #7 – Preparar estrutura e plano de melhoria da Parte 2 | `docs/7-plano-melhoria` | A0 e este documento | Corretiva + documentação | **Concluído** (PR #8, merge `d1149db`) |
-| 2 | #9 – Configurar testes automatizados e integração contínua do PetCare | `fix/9-estrutura-testes-ci` | A1, A2, A9 | Preventiva | Em andamento |
-| 3 | #1 – P1: validação dos dados cadastrados | `fix/1-validacao-cadastro` | A3, A4 | Corretiva | Planejado |
+| 2 | #9 – Configurar testes automatizados e integração contínua do PetCare | `fix/9-estrutura-testes-ci` | A1, A2, A9 | Preventiva | **Concluído** (PR #10, merge `953c771`) |
+| 3 | #1 – P1: validação dos dados cadastrados | `fix/1-validacao-dados` | A3, A4 | Corretiva | Em andamento |
 | 4 | #2 – P2: concluir/excluir via POST com CSRF e confirmação | `fix/2-post-csrf-confirmacao` | A5, A6 | Corretiva | Planejado |
 | 5 | _a criar_ – Refatorar o acesso a dados e o modo debug | `refactor/<nº>-acesso-dados` | A7, A8 | Preventiva | Planejado |
 

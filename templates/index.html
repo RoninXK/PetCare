@@ -21,11 +21,13 @@
 
     <h3>Novo cuidado</h3>
 
-    {% if mensagem %}
+    {% if erros %}
 
+        {% for erro in erros %}
         <p>
-            <strong>{{ mensagem }}</strong>
+            <strong>{{ erro }}</strong>
         </p>
+        {% endfor %}
 
     {% endif %}
 
@@ -38,6 +40,7 @@
             type="text"
             name="nome_pet"
             required
+            {%- if dados and dados.nome_pet %} value="{{ dados.nome_pet }}"{% endif %}
         >
 
         <br><br>
@@ -51,19 +54,19 @@
                 Selecione
             </option>
 
-            <option value="Vacina">
+            <option value="Vacina"{% if dados and dados.tipo_cuidado == "Vacina" %} selected{% endif %}>
                 Vacina
             </option>
 
-            <option value="Consulta">
+            <option value="Consulta"{% if dados and dados.tipo_cuidado == "Consulta" %} selected{% endif %}>
                 Consulta
             </option>
 
-            <option value="Medicamento">
+            <option value="Medicamento"{% if dados and dados.tipo_cuidado == "Medicamento" %} selected{% endif %}>
                 Medicamento
             </option>
 
-            <option value="Outro">
+            <option value="Outro"{% if dados and dados.tipo_cuidado == "Outro" %} selected{% endif %}>
                 Outro
             </option>
 
@@ -78,6 +81,7 @@
             type="text"
             name="descricao"
             required
+            {%- if dados and dados.descricao %} value="{{ dados.descricao }}"{% endif %}
         >
 
         <br><br>
@@ -93,6 +97,7 @@
             maxlength="10"
             inputmode="numeric"
             required
+            {%- if dados and dados.data %} value="{{ dados.data }}"{% endif %}
         >
 
         <br><br>

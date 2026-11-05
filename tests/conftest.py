@@ -5,6 +5,7 @@ isolado do pytest (tmp_path). O banco real (petcare.db) nunca é aberto.
 """
 
 import hashlib
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -47,3 +48,18 @@ def app_teste(banco_temporario, monkeypatch):
 def client(app_teste):
     """Cliente HTTP de teste do Flask."""
     return app_teste.test_client()
+
+
+@pytest.fixture
+def cuidados_gravados(app_teste, banco_temporario):
+    """Função que devolve os cuidados gravados no banco temporário."""
+
+    def consultar():
+        conexao = sqlite3.connect(banco_temporario)
+        conexao.row_factory = sqlite3.Row
+        try:
+            return conexao.execute("SELECT * FROM cuidados").fetchall()
+        finally:
+            conexao.close()
+
+    return consultar
