@@ -1,0 +1,47 @@
+# Pipeline de verificação automática do PetCare (Issue #9).
+# Executa a análise estática (Ruff) e os testes automatizados (pytest)
+# a cada push e a cada pull request.
+#
+# Python 3.14: mesma versão usada no desenvolvimento local (3.14.3),
+# estável desde outubro de 2025 e compatível com todas as versões
+# fixadas em requirements.txt e requirements-dev.txt (verificado com
+# instalação limpa e "pip check").
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  qualidade:
+    name: Ruff e pytest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Obter o código
+        uses: actions/checkout@v5
+
+      - name: Configurar o Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+
+      - name: Instalar as dependências
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m pip check
+
+      - name: Análise estática (Ruff)
+        run: ruff check --output-format=github .
+
+      - name: Testes automatizados (pytest)
+        run: pytest -v --cov --cov-report=term-missing

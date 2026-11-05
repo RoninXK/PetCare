@@ -1,0 +1,30 @@
+# Configuração das ferramentas de qualidade do PetCare.
+# O projeto não é distribuído como pacote; este arquivo contém apenas
+# a configuração do pytest, do pytest-cov e do Ruff.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+src = ["."]
+
+[tool.ruff.lint]
+# E/W: pycodestyle | F: Pyflakes | I: ordenação de imports
+# B: flake8-bugbear (erros prováveis) | UP: pyupgrade (sintaxe moderna)
+#
+# Fora deste conjunto, por enquanto (problemas conhecidos, tratados em
+# ciclos futuros do PLANO_MELHORIA_PARTE2.md):
+#   S201 (flake8-bandit): app.run(debug=True) -> ação A8
+#   A002 (flake8-builtins): parâmetro "id" nas rotas -> ações A6/A7
+select = ["E", "W", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "tests"]

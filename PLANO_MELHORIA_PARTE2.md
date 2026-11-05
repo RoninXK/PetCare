@@ -97,10 +97,12 @@ Também foi registrado que o modo debug será considerado na preparação de uma
 
 ## 2. Problemas prioritários escolhidos (Etapa 2)
 
-| ID | Problema | Motivo da escolha |
-|---|---|---|
-| **P1** | Validação insuficiente dos dados cadastrados, incluindo campos inválidos e datas passadas | Corresponde à prioridade 1 e à limitação 1 da Parte 1. Permite dados inconsistentes no banco e é diretamente testável |
-| **P2** | Operações de concluir e excluir realizadas por GET, sem proteção CSRF e sem confirmação de exclusão | Corresponde à prioridade 2 e à limitação 2 da Parte 1. A exclusão é irreversível e pode ser disparada por clique acidental, por pré-carregamento de link ou por requisição forjada (CSRF) |
+| ID | Problema | Issue | Motivo da escolha |
+|---|---|---|---|
+| **P1** | Validação insuficiente dos dados cadastrados, incluindo campos inválidos e datas passadas | #1 | Corresponde à prioridade 1 e à limitação 1 da Parte 1. Permite dados inconsistentes no banco e é diretamente testável |
+| **P2** | Operações de concluir e excluir realizadas por GET, sem proteção CSRF e sem confirmação de exclusão | #2 | Corresponde à prioridade 2 e à limitação 2 da Parte 1. A exclusão é irreversível e pode ser disparada por clique acidental, por pré-carregamento de link ou por requisição forjada (CSRF) |
+
+> As Issues #1 ("Validar datas passadas no cadastro de cuidados") e #2 ("Adicionar confirmação antes de excluir um cuidado") foram abertas em 25/09/2026, na Parte 1. O escopo de P1 e P2 neste plano é mais amplo que os títulos dessas issues (P1 inclui os demais campos; P2 inclui POST e CSRF). O escopo completo será registrado em cada issue quando o ciclo correspondente começar.
 
 ---
 
@@ -143,7 +145,7 @@ Também foi registrado que o modo debug será considerado na preparação de uma
 
 | ID | Ação | Problema | Tipo de manutenção | Responsável |
 |---|---|---|---|---|
-| A0 | Commitar as renomeações pendentes (`gitignore` → `.gitignore`, `index.html` → `templates/index.html`) | Pré-requisito | Corretiva | RoninXK |
+| A0 | Commitar as renomeações pendentes (`gitignore` → `.gitignore`, `index.html` → `templates/index.html`). **Concluída** no PR #8 (Issue #7, commit `f201883`, merge `d1149db`) | Pré-requisito | Corretiva | RoninXK |
 | A1 | Configurar pytest com o `test_client` do Flask e um banco SQLite temporário (caminho do banco configurável, sem usar o `petcare.db` real) | Pré-requisito de P1 e P2 | Preventiva | RoninXK |
 | A2 | Criar pipeline no GitHub Actions que roda os testes a cada push e pull request | Pré-requisito (Etapa 6) | Preventiva | RoninXK |
 | A3 | Escrever os testes V01–V12 e A01–A02 **antes** da implementação | P1 | Preventiva | RoninXK |
@@ -224,7 +226,7 @@ Os demais indicadores do CodeFactor (nota, linhas, complexidade, métodos, médi
 
 ### P1
 - Os 12 casos inválidos (V01–V12) são rejeitados e nenhum deles grava registro.
-- Os casos válidos (A01, e A02 se a regra for confirmada) são aceitos.
+- Os casos válidos (A01 e A02) são aceitos.
 - O usuário vê uma mensagem que identifica o erro, e os dados já digitados permanecem no formulário.
 - Os testes passam localmente e no pipeline antes do merge.
 
@@ -289,15 +291,18 @@ Fluxo exigido: **issue → branch → commit → pull request → revisão → m
 
 ### 10.1 Issues e branches
 
-| Ordem | Issue (título sugerido) | Branch | Ações | Tipo |
-|---|---|---|---|---|
-| 1 | Plano de melhoria da Parte 2 | `docs/<nº>-plano-melhoria` | Commitar este documento | Documentação |
-| 2 | Corrigir a estrutura do projeto e configurar testes e CI | `fix/<nº>-estrutura-testes-ci` | A0, A1, A2, A9 | Corretiva/preventiva |
-| 3 | P1 – Validação dos dados cadastrados | `fix/<nº>-validacao-cadastro` | A3, A4 | Corretiva |
-| 4 | P2 – Concluir/excluir via POST com CSRF e confirmação | `fix/<nº>-post-csrf-confirmacao` | A5, A6 | Corretiva |
-| 5 | Refatorar o acesso a dados e o modo debug | `refactor/<nº>-acesso-dados` | A7, A8 | Preventiva |
+| Ordem | Issue | Branch | Ações | Tipo | Situação |
+|---|---|---|---|---|---|
+| 1 | #7 – Preparar estrutura e plano de melhoria da Parte 2 | `docs/7-plano-melhoria` | A0 e este documento | Corretiva + documentação | **Concluído** (PR #8, merge `d1149db`) |
+| 2 | #9 – Configurar testes automatizados e integração contínua do PetCare | `fix/9-estrutura-testes-ci` | A1, A2, A9 | Preventiva | Em andamento |
+| 3 | #1 – P1: validação dos dados cadastrados | `fix/1-validacao-cadastro` | A3, A4 | Corretiva | Planejado |
+| 4 | #2 – P2: concluir/excluir via POST com CSRF e confirmação | `fix/2-post-csrf-confirmacao` | A5, A6 | Corretiva | Planejado |
+| 5 | _a criar_ – Refatorar o acesso a dados e o modo debug | `refactor/<nº>-acesso-dados` | A7, A8 | Preventiva | Planejado |
 
-O `<nº>` é o número da issue criada no GitHub. A existência da issue nº 4 (sugerida pela branch remota `issue-4-novo-cuidado`) precisa ser confirmada.
+O `<nº>` é o número da issue criada no GitHub. Situação das demais issues do repositório:
+
+- **#4** ("Alterar título do formulário para \"Novo cuidado\"") está **fechada** desde 25/09/2026. É anterior à Parte 2 e não faz parte deste plano. A branch remota `issue-4-novo-cuidado` é preservada, sem uso neste plano.
+- **#3** ("Permitir edição de um cuidado cadastrado") continua aberta. Corresponde à prioridade 3 da Parte 1, que ficou fora do escopo (seção 1.5).
 
 ### 10.2 Commits
 

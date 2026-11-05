@@ -1,0 +1,12 @@
+-r requirements.txt
+
+pytest==9.2.0
+pytest-cov==7.1.0
+ruff==0.17.3
+
+# Dependências transitivas de pytest e pytest-cov, fixadas para reprodutibilidade
+coverage==7.17.2
+iniconfig==2.3.1
+packaging==26.3
+pluggy==1.7.0
+Pygments==2.21.0
