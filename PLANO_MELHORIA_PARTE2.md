@@ -296,8 +296,8 @@ Fluxo exigido: **issue → branch → commit → pull request → revisão → m
 | 1 | #7 – Preparar estrutura e plano de melhoria da Parte 2 | `docs/7-plano-melhoria` | A0 e este documento | Corretiva + documentação | **Concluído** (PR #8, merge `d1149db`) |
 | 2 | #9 – Configurar testes automatizados e integração contínua do PetCare | `fix/9-estrutura-testes-ci` | A1, A2, A9 | Preventiva | **Concluído** (PR #10, merge `953c771`) |
 | 3 | #1 – P1: validação dos dados cadastrados | `fix/1-validacao-dados` | A3, A4 | Corretiva | **Concluído** (PR #11, merge `71ab1d0`) |
-| 4 | #2 – P2: concluir/excluir via POST com CSRF e confirmação | `fix/2-seguranca-cuidados` | A5, A6 | Corretiva | Em andamento |
-| 5 | _a criar_ – Refatorar o acesso a dados e o modo debug | `refactor/<nº>-acesso-dados` | A7, A8 | Preventiva | Planejado |
+| 4 | #2 – P2: concluir/excluir via POST com CSRF e confirmação | `fix/2-seguranca-cuidados` | A5, A6 | Corretiva | **Concluído** (PR #12, merge `48345f5`) |
+| 5 | #13 – Refatorar o acesso ao banco e desligar o modo debug por padrão | `refactor/13-acesso-dados` | A7, A8 | Preventiva | Em andamento |
 
 O `<nº>` é o número da issue criada no GitHub. Situação das demais issues do repositório:
 

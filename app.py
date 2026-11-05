@@ -2,6 +2,7 @@ import os
 import re
 import secrets
 import sqlite3
+from contextlib import contextmanager
 from datetime import date, datetime
 
 from flask import Flask, abort, redirect, render_template, request
@@ -28,28 +29,71 @@ LIMITE_DESCRICAO = 500
 FORMATO_DATA = re.compile(r"\d{2}/\d{2}/\d{4}")
 
 
+@contextmanager
 def conectar_banco():
+    """Abre a conexão com o banco e garante o fechamento.
+
+    Se o bloco terminar sem erro, as alterações são gravadas (commit); se
+    ocorrer uma exceção, são desfeitas (rollback). Em qualquer caso a
+    conexão é fechada.
+    """
     conexao = sqlite3.connect(app.config["DATABASE"])
     conexao.row_factory = sqlite3.Row
-    return conexao
+    try:
+        yield conexao
+        conexao.commit()
+    except Exception:
+        conexao.rollback()
+        raise
+    finally:
+        conexao.close()
 
 
 def criar_banco():
-    conexao = conectar_banco()
+    with conectar_banco() as conexao:
+        conexao.execute("""
+            CREATE TABLE IF NOT EXISTS cuidados (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome_pet TEXT NOT NULL,
+                tipo_cuidado TEXT NOT NULL,
+                descricao TEXT NOT NULL,
+                data TEXT NOT NULL,
+                status TEXT NOT NULL
+            )
+        """)
 
-    conexao.execute("""
-        CREATE TABLE IF NOT EXISTS cuidados (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome_pet TEXT NOT NULL,
-            tipo_cuidado TEXT NOT NULL,
-            descricao TEXT NOT NULL,
-            data TEXT NOT NULL,
-            status TEXT NOT NULL
-        )
-    """)
 
-    conexao.commit()
-    conexao.close()
+def listar_cuidados():
+    """Cuidados da agenda, ordenados por data."""
+    with conectar_banco() as conexao:
+        return conexao.execute("""
+            SELECT * FROM cuidados
+            ORDER BY data ASC
+        """).fetchall()
+
+
+def inserir_cuidado(nome_pet, tipo_cuidado, descricao, data_banco):
+    with conectar_banco() as conexao:
+        conexao.execute("""
+            INSERT INTO cuidados
+            (nome_pet, tipo_cuidado, descricao, data, status)
+            VALUES (?, ?, ?, ?, ?)
+        """, (nome_pet, tipo_cuidado, descricao, data_banco, "Pendente"))
+
+
+def alterar_cuidado(sql, id_cuidado):
+    """Executa um UPDATE ou DELETE pelo id e retorna quantos registros mudaram."""
+    with conectar_banco() as conexao:
+        return conexao.execute(sql, (id_cuidado,)).rowcount
+
+
+def pagina_inicial(erros=(), dados=None):
+    return render_template(
+        "index.html",
+        cuidados=listar_cuidados(),
+        erros=erros,
+        dados=dados
+    )
 
 
 def converter_data(data_digitada):
@@ -93,106 +137,49 @@ def validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada):
 @app.route("/", methods=["GET", "POST"])
 def inicio():
 
-    erros = []
+    if request.method != "POST":
+        return pagina_inicial()
 
-    if request.method == "POST":
+    nome_pet = request.form.get("nome_pet", "")
+    tipo_cuidado = request.form.get("tipo_cuidado", "")
+    descricao = request.form.get("descricao", "")
+    data_digitada = request.form.get("data", "")
 
-        nome_pet = request.form.get("nome_pet", "")
-        tipo_cuidado = request.form.get("tipo_cuidado", "")
-        descricao = request.form.get("descricao", "")
-        data_digitada = request.form.get("data", "")
+    erros = validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada)
 
-        erros = validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada)
+    if erros:
+        return pagina_inicial(erros, request.form)
 
-        if erros:
+    data_banco = converter_data(data_digitada).strftime("%Y-%m-%d")
+    inserir_cuidado(nome_pet, tipo_cuidado, descricao, data_banco)
 
-            conexao = conectar_banco()
-
-            cuidados = conexao.execute("""
-                SELECT * FROM cuidados
-                ORDER BY data ASC
-            """).fetchall()
-
-            conexao.close()
-
-            return render_template(
-                "index.html",
-                cuidados=cuidados,
-                erros=erros,
-                dados=request.form
-            )
-
-        data_banco = converter_data(data_digitada).strftime("%Y-%m-%d")
-
-        conexao = conectar_banco()
-
-        conexao.execute("""
-            INSERT INTO cuidados
-            (nome_pet, tipo_cuidado, descricao, data, status)
-            VALUES (?, ?, ?, ?, ?)
-        """, (
-            nome_pet,
-            tipo_cuidado,
-            descricao,
-            data_banco,
-            "Pendente"
-        ))
-
-        conexao.commit()
-        conexao.close()
-
-        return redirect("/")
-
-    conexao = conectar_banco()
-
-    cuidados = conexao.execute("""
-        SELECT * FROM cuidados
-        ORDER BY data ASC
-    """).fetchall()
-
-    conexao.close()
-
-    return render_template(
-        "index.html",
-        cuidados=cuidados,
-        erros=erros
-    )
+    return redirect("/")
 
 
-@app.route("/concluir/<int:id>", methods=["POST"])
-def concluir(id):
+@app.route("/concluir/<int:id_cuidado>", methods=["POST"])
+def concluir(id_cuidado):
 
-    conexao = conectar_banco()
-
-    cursor = conexao.execute("""
+    alterados = alterar_cuidado("""
         UPDATE cuidados
         SET status = 'Concluído'
         WHERE id = ?
-    """, (id,))
+    """, id_cuidado)
 
-    conexao.commit()
-    conexao.close()
-
-    if cursor.rowcount == 0:
+    if alterados == 0:
         abort(404)
 
     return redirect("/")
 
 
-@app.route("/excluir/<int:id>", methods=["POST"])
-def excluir(id):
+@app.route("/excluir/<int:id_cuidado>", methods=["POST"])
+def excluir(id_cuidado):
 
-    conexao = conectar_banco()
-
-    cursor = conexao.execute("""
+    alterados = alterar_cuidado("""
         DELETE FROM cuidados
         WHERE id = ?
-    """, (id,))
+    """, id_cuidado)
 
-    conexao.commit()
-    conexao.close()
-
-    if cursor.rowcount == 0:
+    if alterados == 0:
         abort(404)
 
     return redirect("/")
@@ -224,6 +211,11 @@ def data_br(data):
         return data
 
 
+def modo_debug():
+    """O modo debug fica desligado, a não ser que PETCARE_DEBUG seja "1"."""
+    return os.environ.get("PETCARE_DEBUG") == "1"
+
+
 if __name__ == "__main__":
     criar_banco()
-    app.run(debug=True)
+    app.run(debug=modo_debug())

@@ -34,7 +34,9 @@ Depois, inicie a aplicação:
 python app.py
 ```
 
-Ao iniciar, a tabela de cuidados é criada no `petcare.db` caso ainda não exista. Com o servidor rodando, é só abrir http://127.0.0.1:5000 no navegador. O servidor sobe em modo de desenvolvimento (debug), então não deve ser usado em produção.
+Ao iniciar, a tabela de cuidados é criada no `petcare.db` caso ainda não exista. Com o servidor rodando, é só abrir http://127.0.0.1:5000 no navegador. É o servidor de desenvolvimento do Flask, então não deve ser usado em produção.
+
+O modo debug vem desligado. Para ligá-lo durante o desenvolvimento, defina `PETCARE_DEBUG=1` antes de iniciar (no PowerShell, `$env:PETCARE_DEBUG = "1"`). Qualquer outro valor, ou a variável ausente, mantém o debug desligado.
 
 A proteção CSRF depende de uma chave secreta, lida da variável de ambiente `PETCARE_SECRET_KEY`. Se ela não estiver definida, o aplicativo gera uma chave aleatória a cada vez que é iniciado. Isso funciona para uso local, mas uma página que estava aberta antes de reiniciar o servidor precisa ser recarregada antes de enviar um formulário. Para manter a mesma chave, defina a variável antes de iniciar (no PowerShell, `$env:PETCARE_SECRET_KEY = "uma-chave-longa-e-aleatoria"`). A chave não deve ser colocada no repositório.
 
