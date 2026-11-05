@@ -156,14 +156,14 @@ def inicio():
     return redirect("/")
 
 
-@app.route("/concluir/<int:id>", methods=["POST"])
-def concluir(id):
+@app.route("/concluir/<int:id_cuidado>", methods=["POST"])
+def concluir(id_cuidado):
 
     alterados = alterar_cuidado("""
         UPDATE cuidados
         SET status = 'Concluído'
         WHERE id = ?
-    """, id)
+    """, id_cuidado)
 
     if alterados == 0:
         abort(404)
@@ -171,13 +171,13 @@ def concluir(id):
     return redirect("/")
 
 
-@app.route("/excluir/<int:id>", methods=["POST"])
-def excluir(id):
+@app.route("/excluir/<int:id_cuidado>", methods=["POST"])
+def excluir(id_cuidado):
 
     alterados = alterar_cuidado("""
         DELETE FROM cuidados
         WHERE id = ?
-    """, id)
+    """, id_cuidado)
 
     if alterados == 0:
         abort(404)
