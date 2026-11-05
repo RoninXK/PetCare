@@ -68,8 +68,22 @@
                         <option value="Vacina"{% if dados and dados.tipo_cuidado == "Vacina" %} selected{% endif %}>Vacina</option>
                         <option value="Consulta"{% if dados and dados.tipo_cuidado == "Consulta" %} selected{% endif %}>Consulta</option>
                         <option value="Medicamento"{% if dados and dados.tipo_cuidado == "Medicamento" %} selected{% endif %}>Medicamento</option>
-                        <option value="Outro"{% if dados and dados.tipo_cuidado == "Outro" %} selected{% endif %}>Outro</option>
+                        <option value="personalizado"{% if dados and dados.tipo_cuidado == "personalizado" %} selected{% endif %}>Adicionar outro tipo…</option>
                     </select>
+                </div>
+
+                <div class="campo" id="campo-tipo-personalizado">
+                    <label for="tipo_personalizado">Qual tipo?</label>
+                    <input
+                        type="text"
+                        id="tipo_personalizado"
+                        name="tipo_personalizado"
+                        maxlength="50"
+                        aria-describedby="dica-tipo"
+                        autocomplete="off"
+                        {%- if dados and dados.tipo_personalizado %} value="{{ dados.tipo_personalizado }}"{% endif %}
+                    >
+                    <small id="dica-tipo" class="dica">Use quando escolher "Adicionar outro tipo…". Até 50 caracteres.</small>
                 </div>
 
                 <div class="campo">
@@ -169,6 +183,25 @@
     </main>
 
     <script>
+
+        const listaTipo = document.getElementById("tipo_cuidado");
+        const blocoTipo = document.getElementById("campo-tipo-personalizado");
+        const campoTipo = document.getElementById("tipo_personalizado");
+
+        function atualizarTipoPersonalizado() {
+            const personalizado = listaTipo.value === "personalizado";
+            blocoTipo.hidden = !personalizado;
+            campoTipo.required = personalizado;
+        }
+
+        listaTipo.addEventListener("change", function () {
+            atualizarTipoPersonalizado();
+            if (listaTipo.value === "personalizado") {
+                campoTipo.focus();
+            }
+        });
+
+        atualizarTipoPersonalizado();
 
         const campoData = document.getElementById("data");
 

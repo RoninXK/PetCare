@@ -23,9 +23,11 @@ MSG_CSRF = (
     "Volte para a agenda e tente novamente."
 )
 
-TIPOS_CUIDADO = ("Vacina", "Consulta", "Medicamento", "Outro")
+TIPOS_CUIDADO = ("Vacina", "Consulta", "Medicamento")
+TIPO_PERSONALIZADO = "personalizado"
 LIMITE_NOME_PET = 100
 LIMITE_DESCRICAO = 500
+LIMITE_TIPO_PERSONALIZADO = 50
 FORMATO_DATA = re.compile(r"\d{2}/\d{2}/\d{4}")
 
 
@@ -107,7 +109,14 @@ def converter_data(data_digitada):
         return None
 
 
-def validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada):
+def tipo_escolhido(tipo_cuidado, tipo_personalizado):
+    """Tipo que vai para o banco: o da lista ou o digitado, sem espaços nas pontas."""
+    if tipo_cuidado == TIPO_PERSONALIZADO:
+        return tipo_personalizado.strip()
+    return tipo_cuidado
+
+
+def validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada, tipo_personalizado=""):
     """Retorna a lista de mensagens de erro do cadastro (vazia se estiver tudo certo)."""
     erros = []
 
@@ -116,7 +125,15 @@ def validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada):
     elif len(nome_pet) > LIMITE_NOME_PET:
         erros.append(f"O nome do pet pode ter no máximo {LIMITE_NOME_PET} caracteres.")
 
-    if tipo_cuidado not in TIPOS_CUIDADO:
+    if tipo_cuidado == TIPO_PERSONALIZADO:
+        tipo_digitado = tipo_personalizado.strip()
+        if not tipo_digitado:
+            erros.append("Informe o tipo de cuidado.")
+        elif len(tipo_digitado) > LIMITE_TIPO_PERSONALIZADO:
+            erros.append(
+                f"O tipo de cuidado pode ter no máximo {LIMITE_TIPO_PERSONALIZADO} caracteres."
+            )
+    elif tipo_cuidado not in TIPOS_CUIDADO:
         erros.append("Selecione um tipo de cuidado válido.")
 
     if not descricao.strip():
@@ -142,16 +159,21 @@ def inicio():
 
     nome_pet = request.form.get("nome_pet", "")
     tipo_cuidado = request.form.get("tipo_cuidado", "")
+    tipo_personalizado = request.form.get("tipo_personalizado", "")
     descricao = request.form.get("descricao", "")
     data_digitada = request.form.get("data", "")
 
-    erros = validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada)
+    erros = validar_cuidado(
+        nome_pet, tipo_cuidado, descricao, data_digitada, tipo_personalizado
+    )
 
     if erros:
         return pagina_inicial(erros, request.form)
 
     data_banco = converter_data(data_digitada).strftime("%Y-%m-%d")
-    inserir_cuidado(nome_pet, tipo_cuidado, descricao, data_banco)
+    inserir_cuidado(
+        nome_pet, tipo_escolhido(tipo_cuidado, tipo_personalizado), descricao, data_banco
+    )
 
     return redirect("/")
 
