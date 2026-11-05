@@ -19,12 +19,13 @@ src = ["."]
 [tool.ruff.lint]
 # E/W: pycodestyle | F: Pyflakes | I: ordenação de imports
 # B: flake8-bugbear (erros prováveis) | UP: pyupgrade (sintaxe moderna)
-#
-# Fora deste conjunto, por enquanto (problemas conhecidos, tratados em
-# ciclos futuros do PLANO_MELHORIA_PARTE2.md):
-#   S201 (flake8-bandit): app.run(debug=True) -> ação A8
-#   A002 (flake8-builtins): parâmetro "id" nas rotas -> ações A6/A7
-select = ["E", "W", "F", "I", "B", "UP"]
+# A: flake8-builtins (nomes que escondem funções do Python)
+# S: flake8-bandit (problemas de segurança, como debug=True)
+select = ["E", "W", "F", "I", "B", "UP", "A", "S"]
+
+[tool.ruff.lint.per-file-ignores]
+# assert é o jeito normal de verificar resultados no pytest
+"tests/*" = ["S101"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app", "tests"]
