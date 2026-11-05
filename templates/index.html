@@ -3,181 +3,170 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PetCare</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <h1>PetCare</h1>
-
-    <h2>Gerenciador de Cuidados do Pet</h2>
-
-    <p>
-        Organize vacinas, consultas, medicamentos
-        e outros cuidados do seu animal.
-    </p>
-
-    <hr>
-
-    <h3>Novo cuidado</h3>
-
-    {% if erros %}
-
-        {% for erro in erros %}
-        <p>
-            <strong>{{ erro }}</strong>
-        </p>
-        {% endfor %}
-
-    {% endif %}
-
-    <form method="POST">
-
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-        <label>Nome do pet:</label>
-        <br>
-
-        <input
-            type="text"
-            name="nome_pet"
-            required
-            {%- if dados and dados.nome_pet %} value="{{ dados.nome_pet }}"{% endif %}
-        >
-
-        <br><br>
-
-        <label>Tipo de cuidado:</label>
-        <br>
-
-        <select name="tipo_cuidado" required>
-
-            <option value="">
-                Selecione
-            </option>
-
-            <option value="Vacina"{% if dados and dados.tipo_cuidado == "Vacina" %} selected{% endif %}>
-                Vacina
-            </option>
-
-            <option value="Consulta"{% if dados and dados.tipo_cuidado == "Consulta" %} selected{% endif %}>
-                Consulta
-            </option>
-
-            <option value="Medicamento"{% if dados and dados.tipo_cuidado == "Medicamento" %} selected{% endif %}>
-                Medicamento
-            </option>
-
-            <option value="Outro"{% if dados and dados.tipo_cuidado == "Outro" %} selected{% endif %}>
-                Outro
-            </option>
-
-        </select>
-
-        <br><br>
-
-        <label>Descrição:</label>
-        <br>
-
-        <input
-            type="text"
-            name="descricao"
-            required
-            {%- if dados and dados.descricao %} value="{{ dados.descricao }}"{% endif %}
-        >
-
-        <br><br>
-
-        <label>Data:</label>
-        <br>
-
-        <input
-            type="text"
-            name="data"
-            id="data"
-            placeholder="DD/MM/AAAA"
-            maxlength="10"
-            inputmode="numeric"
-            required
-            {%- if dados and dados.data %} value="{{ dados.data }}"{% endif %}
-        >
-
-        <br><br>
-
-        <button type="submit">
-            Cadastrar
-        </button>
-
-    </form>
-
-    <hr>
-
-    <h2>Agenda</h2>
-
-    {% if cuidados %}
-
-        {% for cuidado in cuidados %}
-
+    <header class="cabecalho">
+        <div class="cabecalho-conteudo">
+            <div class="logo" aria-hidden="true">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="5.5" cy="10" r="2.2"/>
+                    <circle cx="9.5" cy="5.5" r="2.2"/>
+                    <circle cx="14.5" cy="5.5" r="2.2"/>
+                    <circle cx="18.5" cy="10" r="2.2"/>
+                    <path d="M12 11c-3 0-6.5 4-6.5 6.6 0 1.6 1.2 2.4 2.7 2.4 1.4 0 2.4-.7 3.8-.7s2.4.7 3.8.7c1.5 0 2.7-.8 2.7-2.4C18.5 15 15 11 12 11z"/>
+                </svg>
+            </div>
             <div>
+                <h1>PetCare</h1>
+                <p>Organize vacinas, consultas, medicamentos e outros cuidados do seu animal.</p>
+            </div>
+        </div>
+    </header>
 
-                <strong>Pet:</strong>
-                {{ cuidado["nome_pet"] }}
+    <main class="conteudo">
 
-                <br>
+        <section class="card" aria-labelledby="titulo-cadastro">
 
-                <strong>Tipo:</strong>
-                {{ cuidado["tipo_cuidado"] }}
+            <h2 id="titulo-cadastro">Novo cuidado</h2>
 
-                <br>
+            {% if erros %}
+            <div class="alerta-erro" role="alert">
+                <strong>Não foi possível cadastrar:</strong>
+                <ul>
+                    {% for erro in erros %}
+                    <li>{{ erro }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
 
-                <strong>Descrição:</strong>
-                {{ cuidado["descricao"] }}
+            <form method="POST">
 
-                <br>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-                <strong>Data:</strong>
-                {{ cuidado["data"] | data_br }}
+                <div class="campo">
+                    <label for="nome_pet">Nome do pet</label>
+                    <input
+                        type="text"
+                        id="nome_pet"
+                        name="nome_pet"
+                        autocomplete="off"
+                        required
+                        {%- if dados and dados.nome_pet %} value="{{ dados.nome_pet }}"{% endif %}
+                    >
+                </div>
 
-                <br>
+                <div class="campo">
+                    <label for="tipo_cuidado">Tipo de cuidado</label>
+                    <select id="tipo_cuidado" name="tipo_cuidado" required>
+                        <option value="">Selecione</option>
+                        <option value="Vacina"{% if dados and dados.tipo_cuidado == "Vacina" %} selected{% endif %}>Vacina</option>
+                        <option value="Consulta"{% if dados and dados.tipo_cuidado == "Consulta" %} selected{% endif %}>Consulta</option>
+                        <option value="Medicamento"{% if dados and dados.tipo_cuidado == "Medicamento" %} selected{% endif %}>Medicamento</option>
+                        <option value="Outro"{% if dados and dados.tipo_cuidado == "Outro" %} selected{% endif %}>Outro</option>
+                    </select>
+                </div>
 
-                <strong>Status:</strong>
-                {{ cuidado["status"] }}
+                <div class="campo">
+                    <label for="descricao">Descrição</label>
+                    <input
+                        type="text"
+                        id="descricao"
+                        name="descricao"
+                        autocomplete="off"
+                        required
+                        {%- if dados and dados.descricao %} value="{{ dados.descricao }}"{% endif %}
+                    >
+                </div>
 
-                <br><br>
+                <div class="campo">
+                    <label for="data">Data</label>
+                    <input
+                        type="text"
+                        id="data"
+                        name="data"
+                        placeholder="DD/MM/AAAA"
+                        maxlength="10"
+                        inputmode="numeric"
+                        aria-describedby="dica-data"
+                        autocomplete="off"
+                        required
+                        {%- if dados and dados.data %} value="{{ dados.data }}"{% endif %}
+                    >
+                    <small id="dica-data" class="dica">Digite só os números; as barras entram sozinhas.</small>
+                </div>
 
-                {% if cuidado["status"] == "Pendente" %}
+                <button type="submit" class="botao botao-principal">Cadastrar</button>
 
-                    <form method="POST" action="/concluir/{{ cuidado['id'] }}" style="display: inline">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit">
-                            Concluir
-                        </button>
-                    </form>
+            </form>
 
-                {% endif %}
+        </section>
 
-                <form method="POST" action="/excluir/{{ cuidado['id'] }}" style="display: inline"
-                      onsubmit="return confirm('Tem certeza que deseja excluir este cuidado?');">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit">
-                        Excluir
-                    </button>
-                </form>
+        <section class="card" aria-labelledby="titulo-agenda">
 
+            <div class="agenda-titulo">
+                <h2 id="titulo-agenda">Agenda</h2>
             </div>
 
-            <hr>
+            {% if cuidados %}
 
-        {% endfor %}
+            <ul class="lista-cuidados">
 
-    {% else %}
+                {% for cuidado in cuidados %}
+                {% set pendente = cuidado["status"] == "Pendente" %}
 
-        <p>
-            Nenhum cuidado agendado.
-        </p>
+                <li class="cuidado {{ 'cuidado-pendente' if pendente else 'cuidado-concluido' }}">
 
-    {% endif %}
+                    <div class="cuidado-topo">
+                        <h3 class="cuidado-pet">{{ cuidado["nome_pet"] }}</h3>
+                        <span class="etiqueta etiqueta-tipo">{{ cuidado["tipo_cuidado"] }}</span>
+                        <span class="etiqueta {{ 'etiqueta-pendente' if pendente else 'etiqueta-concluido' }}">{{ cuidado["status"] }}</span>
+                    </div>
 
+                    <p class="cuidado-descricao">{{ cuidado["descricao"] }}</p>
+                    <p class="cuidado-data">Data: {{ cuidado["data"] | data_br }}</p>
+
+                    <div class="cuidado-acoes">
+
+                        {% if pendente %}
+                        <form method="POST" action="/concluir/{{ cuidado['id'] }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="botao botao-concluir">
+                                Concluir<span class="sr-only"> o cuidado de {{ cuidado["nome_pet"] }}</span>
+                            </button>
+                        </form>
+                        {% endif %}
+
+                        <form method="POST" action="/excluir/{{ cuidado['id'] }}"
+                              onsubmit="return confirm('Tem certeza que deseja excluir este cuidado?');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="botao botao-excluir">
+                                Excluir<span class="sr-only"> o cuidado de {{ cuidado["nome_pet"] }}</span>
+                            </button>
+                        </form>
+
+                    </div>
+
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+
+            <p class="agenda-vazia">Nenhum cuidado agendado.</p>
+
+            {% endif %}
+
+        </section>
+
+    </main>
 
     <script>
 
