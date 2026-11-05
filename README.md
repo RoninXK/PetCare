@@ -14,6 +14,10 @@ Logo abaixo fica a agenda, com os cuidados ordenados por data. Todo cuidado novo
 
 Todos os formulários que alteram dados (cadastro, conclusão e exclusão) usam POST e são protegidos contra CSRF com o Flask-WTF. Um pedido que chegue sem o token do formulário, ou com um token inválido, é recusado com uma mensagem e um link de volta para a agenda.
 
+No computador, o formulário e a agenda ficam lado a lado; no celular, um embaixo do outro. Cada cuidado aparece num card com o tipo e o status, e os concluídos ficam acinzentados para se destacarem dos pendentes. Os campos têm rótulos associados e a página pode ser usada só com o teclado.
+
+![Página principal do PetCare](docs/interface/depois-desktop.png)
+
 ## Tecnologias
 
 O back-end é feito em Python com Flask, a página usa templates HTML com Jinja2 e os dados ficam em SQLite. Para a parte de qualidade, o projeto usa pytest e pytest-cov nos testes, Ruff na análise estática e GitHub Actions na integração contínua. O projeto foi testado com Python 3.14.
@@ -73,12 +77,14 @@ O workflow `.github/workflows/ci.yml` roda no GitHub Actions a cada push e a cad
 ```
 app.py                 aplicação Flask (rotas e acesso ao banco)
 templates/index.html   página principal
+static/style.css       estilos da página
 petcare.db             banco SQLite
 tests/                 testes automatizados
 pyproject.toml         configuração do pytest, da cobertura e do Ruff
 requirements.txt       dependências da aplicação
 requirements-dev.txt   dependências de desenvolvimento
 .github/workflows/     workflow de integração contínua
+docs/interface/        capturas da interface antes e depois da modernização
 ```
 
 ## Qualidade de software
