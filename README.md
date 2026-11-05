@@ -10,7 +10,9 @@ Na página inicial há um formulário para cadastrar um cuidado, informando o no
 
 Os dados são conferidos no servidor antes de serem gravados. O nome do pet (até 100 caracteres) e a descrição (até 500) são obrigatórios e não podem ficar só com espaços, o tipo precisa ser um dos quatro da lista e a data precisa existir e não pode ser anterior a hoje. Se algo estiver errado, a página mostra o que precisa ser corrigido, mantém o que já foi digitado e não grava nada.
 
-Logo abaixo fica a agenda, com os cuidados ordenados por data. Todo cuidado novo entra como pendente e pode ser marcado como concluído ou excluído. Os dados ficam salvos em um banco SQLite local, o arquivo `petcare.db`.
+Logo abaixo fica a agenda, com os cuidados ordenados por data. Todo cuidado novo entra como pendente e pode ser marcado como concluído ou excluído. Antes de excluir, o navegador pede uma confirmação; se você cancelar, nada é apagado. Os dados ficam salvos em um banco SQLite local, o arquivo `petcare.db`.
+
+Todos os formulários que alteram dados (cadastro, conclusão e exclusão) usam POST e são protegidos contra CSRF com o Flask-WTF. Um pedido que chegue sem o token do formulário, ou com um token inválido, é recusado com uma mensagem e um link de volta para a agenda.
 
 ## Tecnologias
 
@@ -33,6 +35,8 @@ python app.py
 ```
 
 Ao iniciar, a tabela de cuidados é criada no `petcare.db` caso ainda não exista. Com o servidor rodando, é só abrir http://127.0.0.1:5000 no navegador. O servidor sobe em modo de desenvolvimento (debug), então não deve ser usado em produção.
+
+A proteção CSRF depende de uma chave secreta, lida da variável de ambiente `PETCARE_SECRET_KEY`. Se ela não estiver definida, o aplicativo gera uma chave aleatória a cada vez que é iniciado. Isso funciona para uso local, mas uma página que estava aberta antes de reiniciar o servidor precisa ser recarregada antes de enviar um formulário. Para manter a mesma chave, defina a variável antes de iniciar (no PowerShell, `$env:PETCARE_SECRET_KEY = "uma-chave-longa-e-aleatoria"`). A chave não deve ser colocada no repositório.
 
 ## Testes e análise estática
 
