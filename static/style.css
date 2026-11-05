@@ -1,0 +1,369 @@
+/* PetCare - estilos da página principal */
+
+:root {
+    --verde-escuro: #115e59;
+    --verde: #0f766e;
+    --verde-claro: #ccfbf1;
+    --verde-fundo: #e8f5f2;
+    --cinza-fundo: #f3f6f7;
+    --cinza-borda: #7d8f96;
+    --cinza-linha: #e2e8eb;
+    --texto: #1f2a30;
+    --texto-suave: #52606a;
+    --branco: #ffffff;
+    --pendente-fundo: #fef3c7;
+    --pendente-texto: #92400e;
+    --erro: #b91c1c;
+    --erro-fundo: #fef2f2;
+    --erro-borda: #fecaca;
+    --raio: 14px;
+    --sombra: 0 1px 2px rgb(15 23 42 / 6%), 0 4px 16px rgb(15 23 42 / 6%);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--cinza-fundo);
+    color: var(--texto);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Cabeçalho */
+
+.cabecalho {
+    background: var(--verde-fundo);
+    border-bottom: 1px solid #cfe7e2;
+}
+
+.cabecalho-conteudo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 20px;
+}
+
+.logo {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--verde);
+    color: var(--branco);
+}
+
+.cabecalho h1 {
+    margin: 0;
+    color: var(--verde-escuro);
+    font-size: 1.9rem;
+    line-height: 1.2;
+}
+
+.cabecalho p {
+    margin: 4px 0 0;
+    color: var(--texto-suave);
+}
+
+/* Estrutura */
+
+.conteudo {
+    display: grid;
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 20px 48px;
+}
+
+@media (min-width: 900px) {
+    .conteudo {
+        grid-template-columns: 380px 1fr;
+        align-items: start;
+    }
+}
+
+.card {
+    background: var(--branco);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    padding: 24px;
+}
+
+.card h2 {
+    margin: 0 0 16px;
+    color: var(--verde-escuro);
+    font-size: 1.3rem;
+}
+
+/* Formulário */
+
+.campo {
+    margin-bottom: 16px;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.campo input,
+.campo select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 8px;
+    background: var(--branco);
+    color: var(--texto);
+    font: inherit;
+}
+
+.campo input:hover,
+.campo select:hover {
+    border-color: #52606a;
+}
+
+.dica {
+    display: block;
+    margin-top: 4px;
+    color: var(--texto-suave);
+    font-size: 0.875rem;
+}
+
+/* Mensagens de erro */
+
+.alerta-erro {
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    border: 1px solid var(--erro-borda);
+    border-left: 5px solid var(--erro);
+    border-radius: 10px;
+    background: var(--erro-fundo);
+    color: #7f1d1d;
+}
+
+.alerta-erro strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.alerta-erro ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+/* Botões */
+
+.botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.botao-principal {
+    width: 100%;
+    background: var(--verde);
+    color: var(--branco);
+}
+
+.botao-principal:hover {
+    background: var(--verde-escuro);
+}
+
+.botao-concluir {
+    background: var(--verde-claro);
+    border-color: #99e6d8;
+    color: var(--verde-escuro);
+}
+
+.botao-concluir:hover {
+    background: #b2f5e6;
+}
+
+.botao-excluir {
+    background: var(--branco);
+    border-color: var(--erro-borda);
+    color: var(--erro);
+}
+
+.botao-excluir:hover {
+    background: var(--erro-fundo);
+}
+
+/* Foco visível para quem navega pelo teclado */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid var(--verde);
+    outline-offset: 2px;
+}
+
+/* Agenda */
+
+.agenda-titulo {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.lista-cuidados {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cuidado {
+    padding: 16px 18px;
+    border: 1px solid var(--cinza-linha);
+    border-left: 5px solid var(--verde);
+    border-radius: 12px;
+    background: var(--branco);
+}
+
+.cuidado-concluido {
+    border-left-color: #94a3b8;
+    background: #f8fafb;
+}
+
+.cuidado-concluido .cuidado-pet {
+    color: var(--texto-suave);
+}
+
+.cuidado-topo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+}
+
+.cuidado-pet {
+    margin: 0;
+    margin-right: auto;
+    font-size: 1.1rem;
+}
+
+.etiqueta {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.etiqueta-tipo {
+    background: #eef2f4;
+    color: #334048;
+}
+
+.etiqueta-pendente {
+    background: var(--pendente-fundo);
+    color: var(--pendente-texto);
+}
+
+.etiqueta-concluido {
+    background: var(--verde-claro);
+    color: var(--verde-escuro);
+}
+
+.cuidado-descricao {
+    margin: 8px 0 4px;
+    overflow-wrap: anywhere;
+}
+
+.cuidado-data {
+    margin: 0;
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+}
+
+.cuidado-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.cuidado-acoes form {
+    margin: 0;
+}
+
+.agenda-vazia {
+    margin: 0;
+    padding: 28px 16px;
+    border: 2px dashed var(--cinza-linha);
+    border-radius: 12px;
+    color: var(--texto-suave);
+    text-align: center;
+}
+
+/* Texto só para leitores de tela */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Celular */
+
+@media (max-width: 480px) {
+    .cabecalho-conteudo {
+        padding: 20px 16px;
+    }
+
+    .cabecalho h1 {
+        font-size: 1.6rem;
+    }
+
+    .conteudo {
+        padding: 16px 12px 32px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .cuidado-acoes .botao,
+    .cuidado-acoes form {
+        flex: 1;
+    }
+
+    .cuidado-acoes .botao {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .botao {
+        transition: none;
+    }
+}
