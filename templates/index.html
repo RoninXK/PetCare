@@ -33,6 +33,8 @@
 
     <form method="POST">
 
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
         <label>Nome do pet:</label>
         <br>
 
@@ -116,7 +118,7 @@
 
         {% for cuidado in cuidados %}
 
-            <p>
+            <div>
 
                 <strong>Pet:</strong>
                 {{ cuidado["nome_pet"] }}
@@ -145,21 +147,24 @@
 
                 {% if cuidado["status"] == "Pendente" %}
 
-                    <a href="/concluir/{{ cuidado['id'] }}">
-                        <button type="button">
+                    <form method="POST" action="/concluir/{{ cuidado['id'] }}" style="display: inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit">
                             Concluir
                         </button>
-                    </a>
+                    </form>
 
                 {% endif %}
 
-                <a href="/excluir/{{ cuidado['id'] }}">
-                    <button type="button">
+                <form method="POST" action="/excluir/{{ cuidado['id'] }}" style="display: inline"
+                      onsubmit="return confirm('Tem certeza que deseja excluir este cuidado?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit">
                         Excluir
                     </button>
-                </a>
+                </form>
 
-            </p>
+            </div>
 
             <hr>
 
