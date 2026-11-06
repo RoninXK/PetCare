@@ -91,7 +91,7 @@ Também foi registrado que o modo debug será considerado na preparação de uma
 
 - **Quais métricas sustentavam o diagnóstico da Parte 1?** As métricas do CodeFactor da seção 1.2 (com destaque para o único problema de segurança) e as quatro limitações conhecidas do `BASELINE.md`.
 - **Quais dois problemas foram escolhidos, e por quê?** P1 e P2 (seção 2). Eles ampliam as prioridades 1 e 2 da Parte 1, afetam a integridade dos dados e a segurança, e podem ser verificados por testes automatizados.
-- **Alguma prioridade deixou de ser relevante?** A prioridade 3 (edição de cuidados) continua relevante, mas fica **fora do escopo**. É uma funcionalidade nova (manutenção perfectiva), não a correção de um defeito existente. O PDF orienta a tratar dois problemas com evidência dentro de duas semanas. O modo debug será tratado como mudança preventiva complementar (seção 5).
+- **Alguma prioridade deixou de ser relevante?** A prioridade 3 (edição de cuidados) continua relevante, mas fica **fora do escopo**. É uma funcionalidade nova (manutenção perfectiva), não a correção de um defeito existente. O PDF orienta a tratar dois problemas com evidência dentro de duas semanas. **Atualização em 06/11/2026:** a edição acabou sendo feita no ciclo 9 (Issue #3), depois dos ciclos do plano. O modo debug será tratado como mudança preventiva complementar (seção 5).
 
 ---
 
@@ -316,11 +316,12 @@ Fluxo exigido: **issue → branch → commit → pull request → revisão → m
 | 6 | #15 – Modernizar a interface do PetCare | `ui/15-interface` | Fora das ações do plano original | Perfectiva | **Concluído** (PR #16, merge `e4eb66c`) |
 | 7 | #17 – Permitir digitar um tipo de cuidado que não está na lista | `feat/17-tipo-personalizado` | Altera a regra de tipo do P1 (seção 6.1) | Perfectiva | **Concluído** (PR #18, merge `fa3a031`) |
 | 8 | #19 – Adicionar pesquisa e filtros na agenda | `feat/19-filtros-agenda` | Fora das ações do plano original (casos F01–F15) | Perfectiva | **Concluído** (PR #20, merge `9cc44f6`) |
+| 9 | #3 – Permitir edição de um cuidado cadastrado | `feat/3-editar-cuidado` | Prioridade 3 da Parte 1 (casos E01–E13) | Perfectiva | **Concluído** (PR_EDICAO) |
 
 O `<nº>` é o número da issue criada no GitHub. Situação das demais issues do repositório:
 
 - **#4** ("Alterar título do formulário para \"Novo cuidado\"") está **fechada** desde 25/09/2026. É anterior à Parte 2 e não faz parte deste plano. A branch remota `issue-4-novo-cuidado` é preservada, sem uso neste plano.
-- **#3** ("Permitir edição de um cuidado cadastrado") continua aberta. Corresponde à prioridade 3 da Parte 1, que ficou fora do escopo (seção 1.5).
+- **#3** ("Permitir edição de um cuidado cadastrado") corresponde à prioridade 3 da Parte 1. Ficou fora do escopo inicial (seção 1.5) e foi feita depois dos outros ciclos, no ciclo 9.
 
 ### 10.2 Commits
 

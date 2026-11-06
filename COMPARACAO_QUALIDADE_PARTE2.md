@@ -112,6 +112,16 @@ Falhas detectadas pelo pipeline: nos ciclos 3, 4, 7 e 8, os testes foram publica
 
 ---
 
+### 3.1 Ciclo 9 – edição de cuidados
+
+Depois desta comparação, a prioridade 3 da Parte 1 (editar um cuidado cadastrado, Issue [#3](https://github.com/RoninXK/PetCare/issues/3)) foi feita no [PR_EDICAO_LINK]. Os indicadores do CodeFactor das seções 1 e 1.5 continuam se referindo ao código analisado e não foram medidos de novo depois dessa mudança.
+
+Nas métricas da seção 2, a edição mudou o seguinte: os testes passaram de 70 para 84 (casos E01–E13, um deles em duas variações), a cobertura do `app.py` foi de 97% para 98%, os formulários de escrita com CSRF passaram a ser 4 de 4 e os achados do Ruff continuam em 0. A busca textual por `SELECT * FROM cuidados` agora encontra 2 ocorrências. A consulta da agenda continua existindo uma vez só; a segunda é a busca de um cuidado pelo id, que a edição precisa. As chamadas `conexao.close()` continuam em 1.
+
+Como nos ciclos 3, 4, 7 e 8, os testes entraram antes da implementação: no commit `fca544b`, 10 dos 14 testes novos falharam e 74 passaram.
+
+---
+
 ## 4. Pendências de confirmação
 
 Já foram coletados no CodeFactor sete dos oito indicadores do `app.py`, além da nota e das issues gerais da branch `main`. Ainda falta confirmar:

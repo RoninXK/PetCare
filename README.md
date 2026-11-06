@@ -10,11 +10,13 @@ Na página inicial há um formulário para cadastrar um cuidado, informando o no
 
 Os dados são conferidos no servidor antes de serem gravados. O nome do pet (até 100 caracteres) e a descrição (até 500) são obrigatórios e não podem ficar só com espaços, o tipo precisa ser um dos três da lista ou, se for digitado, não pode ficar vazio, e a data precisa existir e não pode ser anterior a hoje. Se algo estiver errado, a página mostra o que precisa ser corrigido, mantém o que já foi digitado e não grava nada.
 
-Logo abaixo fica a agenda, com os cuidados ordenados por data. Todo cuidado novo entra como pendente e pode ser marcado como concluído ou excluído. Antes de excluir, o navegador pede uma confirmação; se você cancelar, nada é apagado. Os dados ficam salvos em um banco SQLite local, o arquivo `petcare.db`.
+Logo abaixo fica a agenda, com os cuidados ordenados por data. Todo cuidado novo entra como pendente e pode ser marcado como concluído, editado ou excluído. Antes de excluir, o navegador pede uma confirmação; se você cancelar, nada é apagado. Os dados ficam salvos em um banco SQLite local, o arquivo `petcare.db`.
 
-Todos os formulários que alteram dados (cadastro, conclusão e exclusão) usam POST e são protegidos contra CSRF com o Flask-WTF. Um pedido que chegue sem o token do formulário, ou com um token inválido, é recusado com uma mensagem e um link de volta para a agenda.
+Ao clicar em "Editar", o formulário passa a se chamar "Editar cuidado" e já vem preenchido com o nome do pet, o tipo, a descrição e a data. As regras são as mesmas do cadastro, com uma diferença: se o cuidado já tem uma data que passou, ela pode ser mantida, para que cuidados antigos possam ser corrigidos, mas não dá para trocar por outra data passada. O status não muda ao editar, e "Cancelar" volta para a agenda sem salvar nada.
 
-Em cima da agenda dá para pesquisar pelo nome do pet, pelo tipo ou pela descrição, mostrar só os pendentes ou só os concluídos e escolher se as datas mais antigas ou as mais recentes aparecem primeiro. Os filtros ficam no endereço da página, então continuam valendo ao recarregar e depois de concluir, excluir ou cadastrar um cuidado.
+Todos os formulários que alteram dados (cadastro, edição, conclusão e exclusão) usam POST e são protegidos contra CSRF com o Flask-WTF. Um pedido que chegue sem o token do formulário, ou com um token inválido, é recusado com uma mensagem e um link de volta para a agenda.
+
+Em cima da agenda dá para pesquisar pelo nome do pet, pelo tipo ou pela descrição, mostrar só os pendentes ou só os concluídos e escolher se as datas mais antigas ou as mais recentes aparecem primeiro. Os filtros ficam no endereço da página, então continuam valendo ao recarregar e depois de concluir, editar, excluir ou cadastrar um cuidado.
 
 No computador, o formulário e a agenda ficam lado a lado; no celular, um embaixo do outro. Cada cuidado aparece num card com o tipo e o status, e os concluídos ficam acinzentados para se destacarem dos pendentes. Os campos têm rótulos associados e a página pode ser usada só com o teclado.
 
