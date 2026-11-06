@@ -2,7 +2,7 @@
 
 Projeto Integrador – Qualidade de Software – Universidade Católica de Brasília (UCB)
 
-Este documento reúne as Etapas 7 (nova análise de qualidade) e 8 (comparação antes × depois) do roteiro da Parte 2. Ele compara a versão da Parte 1 (tag `v1.0.0-baseline`, commit `0087a45`) com a versão atual da `main` (commit `15117f7`).
+Este documento reúne as Etapas 7 (nova análise de qualidade) e 8 (comparação antes × depois) do roteiro da Parte 2. Ele compara a versão da Parte 1 (tag `v1.0.0-baseline`, commit `0087a45`) com a `main` no commit `15117f7`. O código desse commit é o mesmo da release `v2.0.0` (`89251cf`), que só acrescentou este documento. As seções 1 a 3 se referem a essa versão; o que veio depois está na seção 3.1.
 
 **Situação:** os indicadores do CodeFactor da Parte 2 foram coletados, com exceção do número de problemas de segurança do `app.py`, que ainda precisa ser confirmado no detalhe do arquivo. A data exata e o commit da nova análise também estão pendentes de confirmação. Os demais indicadores foram medidos no repositório entre 04/11 e 05/11/2026, com os métodos descritos em cada seção.
 
@@ -89,7 +89,7 @@ Observações sobre a tabela:
 
 ## 3. Evidências
 
-Todos os ciclos seguiram o fluxo issue → branch → commits → pull request → revisão → merge. As revisões foram individuais, feitas pelo próprio desenvolvedor com apoio do Claude Code, e não são revisões independentes.
+Todos os ciclos seguiram o fluxo issue → branch → commits → pull request → revisão → merge. As revisões foram revisões técnicas individuais, feitas pelo próprio desenvolvedor, e não são revisões independentes.
 
 | Ciclo | Issue | Pull request e revisão | Merge | CI na `main` após o merge |
 |---|---|---|---|---|
@@ -112,11 +112,22 @@ Falhas detectadas pelo pipeline: nos ciclos 3, 4, 7 e 8, os testes foram publica
 
 ---
 
-### 3.1 Ciclo 9 – edição de cuidados
+### 3.1 Depois da v2.0.0: ciclo 9, edição de cuidados
 
-Depois desta comparação, a prioridade 3 da Parte 1 (editar um cuidado cadastrado, Issue [#3](https://github.com/RoninXK/PetCare/issues/3)) foi feita no [PR #25](https://github.com/RoninXK/PetCare/pull/25). Os indicadores do CodeFactor das seções 1 e 1.5 continuam se referindo ao código analisado e não foram medidos de novo depois dessa mudança.
+Depois da release `v2.0.0`, a prioridade 3 da Parte 1 (editar um cuidado cadastrado, Issue [#3](https://github.com/RoninXK/PetCare/issues/3)) foi feita no [PR #25](https://github.com/RoninXK/PetCare/pull/25) ([revisão](https://github.com/RoninXK/PetCare/pull/25#issuecomment-6676274214)). O merge é o `bb319cc`, de 06/11/2026, e o CI da `main` depois dele passou no [run 42158654399](https://github.com/RoninXK/PetCare/actions/runs/42158654399). Os indicadores do CodeFactor das seções 1 e 1.5 continuam se referindo à `v2.0.0` e não foram medidos de novo.
 
-Nas métricas da seção 2, a edição mudou o seguinte: os testes passaram de 70 para 84 (casos E01–E13, um deles em duas variações), a cobertura do `app.py` foi de 97% para 98%, os formulários de escrita com CSRF passaram a ser 4 de 4 e os achados do Ruff continuam em 0. A busca textual por `SELECT * FROM cuidados` agora encontra 2 ocorrências. A consulta da agenda continua existindo uma vez só; a segunda é a busca de um cuidado pelo id, que a edição precisa. As chamadas `conexao.close()` continuam em 1.
+As métricas da seção 2 que mudaram, medidas nos dois commits pelo mesmo método:
+
+| Indicador | `v2.0.0` (`89251cf`) | Depois do ciclo 9 (`bb319cc`) |
+|---|---|---|
+| Testes automatizados | 70 | 84 |
+| Cobertura de testes do `app.py` | 97% | 98% |
+| Formulários de escrita com proteção CSRF | 3 de 3 | 4 de 4 |
+| Ocorrências de `SELECT * FROM cuidados` | 1 | 2 |
+| Chamadas `conexao.close()` | 1 | 1 |
+| Achados do Ruff no `app.py` | 0 | 0 |
+
+Os 14 testes novos são os casos E01–E13, um deles em duas variações. A segunda ocorrência de `SELECT * FROM cuidados` não é uma cópia da consulta da agenda, que continua existindo uma vez só: é a busca de um cuidado pelo id, que a edição precisa. Mesmo assim, pelo método da busca textual, o indicador passou de 1 para 2.
 
 Como nos ciclos 3, 4, 7 e 8, os testes entraram antes da implementação: no commit `fca544b`, 10 dos 14 testes novos falharam e 74 passaram. Essa falha foi medida localmente: os commits foram enviados juntos, então o CI só rodou nos commits seguintes, já com a correção.
 
@@ -140,4 +151,4 @@ Já foram coletados no CodeFactor sete dos oito indicadores do `app.py`, além d
 - A data e o commit exato da nova análise do CodeFactor ainda não foram confirmados no painel.
 - O `app.py` cresceu com funcionalidades que não existiam na Parte 1 (tipos digitados, filtros). Parte da variação de linhas, métodos e complexidade vem dessas funcionalidades, e não só da correção dos problemas. A comparação não separa as duas origens.
 - A forma exata como o CodeFactor calcula a complexidade não foi verificada. A relação de complexidade por método é uma conta feita a partir dos valores do painel, não um indicador fornecido pela ferramenta.
-- As revisões de código foram individuais e assistidas por IA, sem revisor independente.
+- As revisões de código foram revisões técnicas individuais, sem revisor independente.

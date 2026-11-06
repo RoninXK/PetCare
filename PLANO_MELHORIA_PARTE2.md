@@ -7,7 +7,7 @@ Projeto Integrador – Qualidade de Software – Universidade Católica de Bras�
 | Documento | Etapas 1 e 2 da Parte 2 (retomada da baseline e plano de melhoria) |
 | Data de elaboração | 04/11/2026 |
 | Situação | Aprovado pelo responsável em 04/11/2026 |
-| Equipe | Projeto individual: um único integrante (usuário GitHub `RoninXK`), com auxílio do Claude Code |
+| Equipe | Projeto individual: um único integrante (usuário GitHub `RoninXK`) |
 | Regra | Este plano é aprovado **antes** de qualquer alteração no código da aplicação |
 
 ---
@@ -25,10 +25,10 @@ Projeto Integrador – Qualidade de Software – Universidade Católica de Bras�
 | Confirmação de exclusão | `confirm()` em JavaScript no formulário de exclusão |
 | `petcare.db` | Preservado por enquanto: sem excluir dados e sem alterar seu histórico no Git |
 | Branches antigas (`RoninXK-patch-1`, `issue-4-novo-cuidado`) | Preservadas |
-| Revisão de código | Revisão individual assistida pelo Claude Code, documentada com checklist (seção 10.3) |
+| Revisão de código | Revisão técnica individual, documentada com checklist (seção 10.3) |
 | Pendentes de confirmação | Data de entrega (06/11 ou 13/11/2026); data e commit da análise original no CodeFactor |
 
-> **Limitação da revisão:** o roteiro exige "um pull request revisado por outro integrante, com o comentário da revisão visível". Como o projeto é individual, a revisão será feita pelo próprio responsável com auxílio do Claude Code. **Essa revisão não equivale à revisão independente por outro integrante exigida no roteiro, e sua aceitação depende da aprovação do professor.**
+> **Limitação da revisão:** o roteiro exige "um pull request revisado por outro integrante, com o comentário da revisão visível". Como o projeto é individual, será feita uma revisão técnica individual pelo próprio responsável. **Essa revisão não equivale à revisão independente por outro integrante exigida no roteiro, e sua aceitação depende da aprovação do professor.**
 
 ---
 
@@ -254,7 +254,7 @@ Com isso, o indicador do P1 passa a ter 16 casos inválidos (V01–V16).
 
 ### Gerais
 - Cada mudança passa pelo fluxo issue → branch → commit → pull request → revisão → merge (seção 10).
-- Todo PR recebe a revisão individual assistida pelo Claude Code, com checklist preenchido e comentário visível no PR (seção 10.3).
+- Todo PR recebe uma revisão técnica individual, com checklist preenchido e comentário visível no PR (seção 10.3).
 - A nova análise usa o CodeFactor, como na baseline, e registra data e versão.
 
 ---
@@ -289,7 +289,7 @@ Evidências a guardar: link e captura do painel do CodeFactor (antes e depois), 
 | A confirmação da exclusão adicionar um passo para o usuário | Pequena perda de agilidade (trade-off usabilidade × segurança) | Confirmação simples, de um clique |
 | `confirm()` em JavaScript não ser executado pelos testes automatizados e poder ser ignorado se o JavaScript estiver desativado | O indicador de confirmação depende de verificação manual | Teste C08 sobre o HTML, verificação manual registrada no PR, CSRF como proteção contra requisições forjadas |
 | Teste usar o `petcare.db` real | Corromper dados ou gerar resultados instáveis | Banco temporário configurável nos testes (A1); o `petcare.db` é preservado |
-| Projeto individual: não há revisão independente por outro integrante | Exigência do roteiro atendida só parcialmente; risco na nota do critério "Práticas de garantia da qualidade" | Revisão assistida pelo Claude Code com checklist documentado no PR; submeter a adaptação à aprovação do professor |
+| Projeto individual: não há revisão independente por outro integrante | Exigência do roteiro atendida só parcialmente; risco na nota do critério "Práticas de garantia da qualidade" | Revisão técnica individual com checklist documentado no PR; submeter a adaptação à aprovação do professor |
 | A regra "data não passada" depender do fuso horário ou do relógio | Testes instáveis | Calcular a data relativa ("hoje", "ontem") dentro do teste |
 
 ### Questões norteadoras da Etapa 2
@@ -316,7 +316,9 @@ Fluxo exigido: **issue → branch → commit → pull request → revisão → m
 | 6 | #15 – Modernizar a interface do PetCare | `ui/15-interface` | Fora das ações do plano original | Perfectiva | **Concluído** (PR #16, merge `e4eb66c`) |
 | 7 | #17 – Permitir digitar um tipo de cuidado que não está na lista | `feat/17-tipo-personalizado` | Altera a regra de tipo do P1 (seção 6.1) | Perfectiva | **Concluído** (PR #18, merge `fa3a031`) |
 | 8 | #19 – Adicionar pesquisa e filtros na agenda | `feat/19-filtros-agenda` | Fora das ações do plano original (casos F01–F15) | Perfectiva | **Concluído** (PR #20, merge `9cc44f6`) |
-| 9 | #3 – Permitir edição de um cuidado cadastrado | `feat/3-editar-cuidado` | Prioridade 3 da Parte 1 (casos E01–E13) | Perfectiva | **Concluído** (PR #25) |
+| 9 | #3 – Permitir edição de um cuidado cadastrado | `feat/3-editar-cuidado` | Prioridade 3 da Parte 1 (casos E01–E13) | Perfectiva | **Concluído** (PR #25, merge `bb319cc`) |
+
+Os ciclos 1 a 8 e a documentação final fazem parte da release `v2.0.0` (merge `89251cf`). O ciclo 9 foi feito depois dela, em 06/11/2026, e ainda não está em nenhuma release. A ideia é publicá-lo como `v2.1.0`.
 
 O `<nº>` é o número da issue criada no GitHub. Situação das demais issues do repositório:
 
@@ -333,10 +335,10 @@ O `<nº>` é o número da issue criada no GitHub. Situação das demais issues d
 
 Todo PR aponta para a `main` e contém: link da issue, descrição da mudança, tipo de manutenção e evidência dos testes.
 
-**Processo de revisão individual assistida pelo Claude Code:**
+**Processo de revisão técnica individual:**
 
 1. O responsável abre o PR com a descrição e o checklist abaixo.
-2. O Claude Code revisa o diff do PR contra o checklist e contra os critérios de aceitação deste plano, e aponta problemas encontrados.
+2. O diff do PR é revisado contra o checklist e contra os critérios de aceitação deste plano, e os problemas encontrados são anotados.
 3. O resultado da revisão (itens conferidos, problemas encontrados e o que foi corrigido) é registrado como **comentário no PR**, para ficar visível.
 4. Se houver correções, elas entram como novos commits no mesmo PR, e o checklist é conferido de novo.
 5. O responsável decide o merge somente com o checklist completo e o pipeline verde.
@@ -355,13 +357,14 @@ Regras:
 - Merge só com o checklist completo, o comentário de revisão registrado e o pipeline verde.
 - Recomendação: ativar a proteção da `main` no GitHub, exigindo PR e CI verde. A exigência de aprovação fica desligada, porque o GitHub não permite que o autor aprove o próprio PR.
 
-> **Importante:** esta revisão individual assistida **não equivale à revisão independente por outro integrante** exigida no roteiro ("um pull request revisado por outro integrante, com o comentário da revisão visível"). A adaptação foi adotada porque o projeto é desenvolvido por um único integrante, e sua aceitação **depende da aprovação do professor**.
+> **Importante:** esta revisão técnica individual **não equivale à revisão independente por outro integrante** exigida no roteiro ("um pull request revisado por outro integrante, com o comentário da revisão visível"). A adaptação foi adotada porque o projeto é desenvolvido por um único integrante, e sua aceitação **depende da aprovação do professor**.
 
 ### 10.4 Merge, tag e release
 
 - Merge pela interface do GitHub depois da aprovação e do CI verde. A branch é apagada após o merge.
 - Depois dos ciclos, nova análise no CodeFactor sobre a `main`.
 - Tag final sugerida: `v2.0.0`, com release no GitHub descrevendo as mudanças e o link para este plano.
+- A tag `v2.0.0` foi criada sobre o `89251cf` e não será movida. O que veio depois (ciclo 9, edição de cuidados) entra numa versão nova, sugerida `v2.1.0`.
 - A tag `v1.0.0-baseline` permanece inalterada.
 
 ---
@@ -370,6 +373,6 @@ Regras:
 
 1. Data de entrega (06/11 ou 13/11/2026).
 2. Data e commit da análise original no CodeFactor.
-3. Aprovação do professor para a revisão individual assistida pelo Claude Code no lugar da revisão por outro integrante.
+3. Aprovação do professor para a revisão técnica individual no lugar da revisão por outro integrante.
 
 As demais decisões estão registradas na seção 0.
