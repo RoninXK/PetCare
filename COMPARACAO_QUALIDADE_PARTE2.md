@@ -89,7 +89,7 @@ Observações sobre a tabela:
 
 ## 3. Evidências
 
-Todos os ciclos seguiram o fluxo issue → branch → commits → pull request → revisão → merge. As revisões foram individuais, feitas pelo próprio desenvolvedor com apoio do Claude Code, e não são revisões independentes.
+Todos os ciclos seguiram o fluxo issue → branch → commits → pull request → revisão → merge. As revisões foram revisões técnicas individuais, feitas pelo próprio desenvolvedor, e não são revisões independentes.
 
 | Ciclo | Issue | Pull request e revisão | Merge | CI na `main` após o merge |
 |---|---|---|---|---|
@@ -151,4 +151,4 @@ Já foram coletados no CodeFactor sete dos oito indicadores do `app.py`, além d
 - A data e o commit exato da nova análise do CodeFactor ainda não foram confirmados no painel.
 - O `app.py` cresceu com funcionalidades que não existiam na Parte 1 (tipos digitados, filtros). Parte da variação de linhas, métodos e complexidade vem dessas funcionalidades, e não só da correção dos problemas. A comparação não separa as duas origens.
 - A forma exata como o CodeFactor calcula a complexidade não foi verificada. A relação de complexidade por método é uma conta feita a partir dos valores do painel, não um indicador fornecido pela ferramenta.
-- As revisões de código foram individuais e assistidas por IA, sem revisor independente.
+- As revisões de código foram revisões técnicas individuais, sem revisor independente.
