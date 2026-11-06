@@ -118,7 +118,7 @@ Depois desta comparação, a prioridade 3 da Parte 1 (editar um cuidado cadastra
 
 Nas métricas da seção 2, a edição mudou o seguinte: os testes passaram de 70 para 84 (casos E01–E13, um deles em duas variações), a cobertura do `app.py` foi de 97% para 98%, os formulários de escrita com CSRF passaram a ser 4 de 4 e os achados do Ruff continuam em 0. A busca textual por `SELECT * FROM cuidados` agora encontra 2 ocorrências. A consulta da agenda continua existindo uma vez só; a segunda é a busca de um cuidado pelo id, que a edição precisa. As chamadas `conexao.close()` continuam em 1.
 
-Como nos ciclos 3, 4, 7 e 8, os testes entraram antes da implementação: no commit `fca544b`, 10 dos 14 testes novos falharam e 74 passaram.
+Como nos ciclos 3, 4, 7 e 8, os testes entraram antes da implementação: no commit `fca544b`, 10 dos 14 testes novos falharam e 74 passaram. Essa falha foi medida localmente: os commits foram enviados juntos, então o CI só rodou nos commits seguintes, já com a correção.
 
 ---
 
