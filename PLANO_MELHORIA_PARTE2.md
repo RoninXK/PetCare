@@ -316,7 +316,7 @@ Fluxo exigido: **issue → branch → commit → pull request → revisão → m
 | 6 | #15 – Modernizar a interface do PetCare | `ui/15-interface` | Fora das ações do plano original | Perfectiva | **Concluído** (PR #16, merge `e4eb66c`) |
 | 7 | #17 – Permitir digitar um tipo de cuidado que não está na lista | `feat/17-tipo-personalizado` | Altera a regra de tipo do P1 (seção 6.1) | Perfectiva | **Concluído** (PR #18, merge `fa3a031`) |
 | 8 | #19 – Adicionar pesquisa e filtros na agenda | `feat/19-filtros-agenda` | Fora das ações do plano original (casos F01–F15) | Perfectiva | **Concluído** (PR #20, merge `9cc44f6`) |
-| 9 | #3 – Permitir edição de um cuidado cadastrado | `feat/3-editar-cuidado` | Prioridade 3 da Parte 1 (casos E01–E13) | Perfectiva | **Concluído** (PR_EDICAO) |
+| 9 | #3 – Permitir edição de um cuidado cadastrado | `feat/3-editar-cuidado` | Prioridade 3 da Parte 1 (casos E01–E13) | Perfectiva | **Concluído** (PR #25) |
 
 O `<nº>` é o número da issue criada no GitHub. Situação das demais issues do repositório:
 
