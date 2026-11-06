@@ -197,6 +197,24 @@ body {
     background: #b2f5e6;
 }
 
+.botao-editar,
+.botao-cancelar {
+    background: var(--branco);
+    border-color: var(--cinza-borda);
+    color: var(--texto);
+    text-decoration: none;
+}
+
+.botao-editar:hover,
+.botao-cancelar:hover {
+    background: var(--cinza-fundo);
+}
+
+.formulario-acoes {
+    display: grid;
+    gap: 8px;
+}
+
 .botao-excluir {
     background: var(--branco);
     border-color: var(--erro-borda);

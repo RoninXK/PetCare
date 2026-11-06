@@ -130,7 +130,38 @@ def alterar_cuidado(sql, id_cuidado):
         return conexao.execute(sql, (id_cuidado,)).rowcount
 
 
-def pagina_inicial(erros=(), dados=None):
+def buscar_cuidado(id_cuidado):
+    """Retorna o cuidado com esse id, ou None se ele não existir."""
+    with conectar_banco() as conexao:
+        return conexao.execute(
+            "SELECT * FROM cuidados WHERE id = ?", (id_cuidado,)
+        ).fetchone()
+
+
+def atualizar_cuidado(id_cuidado, nome_pet, tipo_cuidado, descricao, data_banco):
+    """Grava os novos dados do cuidado. O status não muda."""
+    with conectar_banco() as conexao:
+        conexao.execute("""
+            UPDATE cuidados
+            SET nome_pet = ?, tipo_cuidado = ?, descricao = ?, data = ?
+            WHERE id = ?
+        """, (nome_pet, tipo_cuidado, descricao, data_banco, id_cuidado))
+
+
+def dados_do_formulario(cuidado):
+    """Dados de um cuidado gravado no formato em que o formulário os mostra."""
+    tipo = cuidado["tipo_cuidado"]
+    personalizado = tipo not in TIPOS_CUIDADO
+    return {
+        "nome_pet": cuidado["nome_pet"],
+        "tipo_cuidado": TIPO_PERSONALIZADO if personalizado else tipo,
+        "tipo_personalizado": tipo if personalizado else "",
+        "descricao": cuidado["descricao"],
+        "data": data_br(cuidado["data"]),
+    }
+
+
+def pagina_inicial(erros=(), dados=None, edicao=None):
     filtros = ler_filtros(request.args)
     alterados = filtros_alterados(filtros)
     return render_template(
@@ -138,6 +169,7 @@ def pagina_inicial(erros=(), dados=None):
         cuidados=listar_cuidados(**filtros),
         erros=erros,
         dados=dados,
+        edicao=edicao,
         filtros=filtros,
         filtros_ativos=bool(alterados),
         consulta_filtros=urlencode(alterados)
@@ -162,8 +194,15 @@ def tipo_escolhido(tipo_cuidado, tipo_personalizado):
     return tipo_cuidado
 
 
-def validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada, tipo_personalizado=""):
-    """Retorna a lista de mensagens de erro do cadastro (vazia se estiver tudo certo)."""
+def validar_cuidado(
+    nome_pet, tipo_cuidado, descricao, data_digitada, tipo_personalizado="", data_atual=None
+):
+    """Retorna a lista de mensagens de erro do cadastro (vazia se estiver tudo certo).
+
+    Na edição, data_atual é a data já gravada (AAAA-MM-DD). Ela continua
+    aceita mesmo que já tenha passado, para que cuidados antigos possam ser
+    corrigidos; qualquer outra data passada é recusada.
+    """
     erros = []
 
     if not nome_pet.strip():
@@ -191,7 +230,7 @@ def validar_cuidado(nome_pet, tipo_cuidado, descricao, data_digitada, tipo_perso
 
     if data_convertida is None:
         erros.append("Data inválida. Digite uma data válida no formato DD/MM/AAAA.")
-    elif data_convertida < date.today():
+    elif data_convertida < date.today() and data_convertida.isoformat() != data_atual:
         erros.append("A data não pode ser anterior a hoje.")
 
     return erros
@@ -219,6 +258,40 @@ def inicio():
     data_banco = converter_data(data_digitada).strftime("%Y-%m-%d")
     inserir_cuidado(
         nome_pet, tipo_escolhido(tipo_cuidado, tipo_personalizado), descricao, data_banco
+    )
+
+    return redirect(endereco_da_agenda(ler_filtros(request.args)))
+
+
+@app.route("/editar/<int:id_cuidado>", methods=["GET", "POST"])
+def editar(id_cuidado):
+
+    cuidado = buscar_cuidado(id_cuidado)
+
+    if cuidado is None:
+        abort(404)
+
+    if request.method != "POST":
+        return pagina_inicial(dados=dados_do_formulario(cuidado), edicao=cuidado)
+
+    nome_pet = request.form.get("nome_pet", "")
+    tipo_cuidado = request.form.get("tipo_cuidado", "")
+    tipo_personalizado = request.form.get("tipo_personalizado", "")
+    descricao = request.form.get("descricao", "")
+    data_digitada = request.form.get("data", "")
+
+    erros = validar_cuidado(
+        nome_pet, tipo_cuidado, descricao, data_digitada, tipo_personalizado,
+        data_atual=cuidado["data"]
+    )
+
+    if erros:
+        return pagina_inicial(erros, request.form, edicao=cuidado)
+
+    data_banco = converter_data(data_digitada).strftime("%Y-%m-%d")
+    atualizar_cuidado(
+        id_cuidado, nome_pet, tipo_escolhido(tipo_cuidado, tipo_personalizado),
+        descricao, data_banco
     )
 
     return redirect(endereco_da_agenda(ler_filtros(request.args)))

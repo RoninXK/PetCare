@@ -68,7 +68,7 @@ def test_e02_pagina_de_edicao_vem_preenchida(client, cuidado_existente):
     assert re.search(r'id="descricao"\s+name="descricao"[^>]*value="Antirrábica"', html)
     assert re.search(r'id="data"\s+name="data"[^>]*value="31/12/2099"', html)
     assert "Salvar alterações" in html
-    assert 'href="/">Cancelar</a>' in html
+    assert re.search(r'<a href="/"[^>]*>Cancelar</a>', html)
 
 
 def test_e03_editar_cuidado_inexistente_retorna_404(client, cuidado_existente):
@@ -191,7 +191,7 @@ def test_e12_edicao_mantem_os_filtros_da_agenda(client, cuidado_existente):
 
     assert f'href="/editar/{cuidado_existente}?busca=rex&amp;status=pendentes"' in html
     assert f'action="/editar/{cuidado_existente}?busca=rex"' in pagina
-    assert 'href="/?busca=rex">Cancelar</a>' in pagina
+    assert re.search(r'<a href="/\?busca=rex"[^>]*>Cancelar</a>', pagina)
     assert resposta.headers["Location"] == "/?busca=rex"
 
 

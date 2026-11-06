@@ -32,11 +32,11 @@
 
         <section class="card" aria-labelledby="titulo-cadastro">
 
-            <h2 id="titulo-cadastro">Novo cuidado</h2>
+            <h2 id="titulo-cadastro">{{ "Editar cuidado" if edicao else "Novo cuidado" }}</h2>
 
             {% if erros %}
             <div class="alerta-erro" role="alert">
-                <strong>Não foi possível cadastrar:</strong>
+                <strong>Não foi possível {{ "salvar" if edicao else "cadastrar" }}:</strong>
                 <ul>
                     {% for erro in erros %}
                     <li>{{ erro }}</li>
@@ -45,7 +45,11 @@
             </div>
             {% endif %}
 
+            {% if edicao %}
+            <form method="POST" action="/editar/{{ edicao['id'] }}{% if consulta_filtros %}?{{ consulta_filtros }}{% endif %}">
+            {% else %}
             <form method="POST">
+            {% endif %}
 
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
@@ -115,7 +119,14 @@
                     <small id="dica-data" class="dica">Digite só os números; as barras entram sozinhas.</small>
                 </div>
 
+                {% if edicao %}
+                <div class="formulario-acoes">
+                    <button type="submit" class="botao botao-principal">Salvar alterações</button>
+                    <a href="/{% if consulta_filtros %}?{{ consulta_filtros }}{% endif %}" class="botao botao-cancelar">Cancelar</a>
+                </div>
+                {% else %}
                 <button type="submit" class="botao botao-principal">Cadastrar</button>
+                {% endif %}
 
             </form>
 
@@ -186,6 +197,10 @@
                             </button>
                         </form>
                         {% endif %}
+
+                        <a href="/editar/{{ cuidado['id'] }}{% if consulta_filtros %}?{{ consulta_filtros }}{% endif %}" class="botao botao-editar">
+                            Editar<span class="sr-only"> o cuidado de {{ cuidado["nome_pet"] }}</span>
+                        </a>
 
                         <form method="POST" action="/excluir/{{ cuidado['id'] }}{% if consulta_filtros %}?{{ consulta_filtros }}{% endif %}"
                               onsubmit="return confirm('Tem certeza que deseja excluir este cuidado?');">
